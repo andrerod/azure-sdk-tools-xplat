@@ -385,7 +385,7 @@ suite('azure mobile', function(){
   });  
 
   test('config set ' + servicename + ' apns dev:foobar:' + __dirname + '/mobile/cert.pfx --json (set apns certificate)', function(done) {
-    var cmd = ('node cli.js mobile config set ' + servicename + ' apns dev:foobar:' + __dirname + '/mobile/cert.pfx --json').split(' ');
+    var cmd = ('node cli.js mobile config set ' + servicename + ' apns dev:foobar:"' + __dirname + '/mobile/cert.pfx" --json').split(' ');
     var scopes = setupNock(cmd);
     executeCmd(cmd, function (result) {
       result.exitStatus.should.equal(0);
@@ -648,9 +648,10 @@ suite('azure mobile', function(){
   });
 
   test('script upload ' + servicename + ' table/table1.insert -f ' + __dirname + '/mobile/table1.insert.js --json (upload one script)', function(done) {
-    var cmd = ('node cli.js mobile script upload ' + servicename + ' table/table1.insert -f ' + __dirname + '/mobile/table1.insert.js --json').split(' ');
+    var cmd = ('node cli.js mobile script upload ' + servicename + ' table/table1.insert -f "' + __dirname + '/mobile/table1.insert.js" --json').split(' ');
     var scopes = setupNock(cmd);
     executeCmd(cmd, function (result) {
+      result.errorText.should.equal('');
       result.exitStatus.should.equal(0);
       result.text.should.equal('');
       checkScopes(scopes);
