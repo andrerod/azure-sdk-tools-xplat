@@ -648,7 +648,10 @@ suite('azure mobile', function(){
   });
 
   test('script upload ' + servicename + ' table/table1.insert -f ' + __dirname + '/mobile/table1.insert.js --json (upload one script)', function(done) {
-    var cmd = ('node cli.js mobile script upload ' + servicename + ' table/table1.insert -f "' + __dirname + '/mobile/table1.insert.js" --json').split(' ');
+    var cmd = ('node cli.js mobile script upload ' + servicename + ' table/table1.insert -f ').split(' ');
+    cmd.push('"' + __dirname + '/mobile/table1.insert.js"');
+    cmd.push('--json');
+
     var scopes = setupNock(cmd);
     executeCmd(cmd, function (result) {
       result.errorText.should.equal('');
