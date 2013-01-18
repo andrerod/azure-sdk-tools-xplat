@@ -244,7 +244,7 @@ suite('azure mobile', function(){
       checkScopes(scopes);
       done();
     });
-  });    
+  });
 
   test('job create ' + servicename + ' foobar --json (create default scheduled job)', function(done) {
     var cmd = ('node cli.js mobile job create ' + servicename + ' foobar --json').split(' ');
@@ -255,7 +255,7 @@ suite('azure mobile', function(){
       checkScopes(scopes);
       done();
     });
-  });    
+  });
 
   test('job list --json (contains one scheduled job)', function(done) {
     var cmd = ('node cli.js mobile job list ' + servicename + ' --json').split(' ');
@@ -271,7 +271,7 @@ suite('azure mobile', function(){
       checkScopes(scopes);
       done();
     });
-  });    
+  });
 
   test('job update ' + servicename + ' foobar -u hour -i 2 -a enabled --json (update scheduled job)', function(done) {
     var cmd = ('node cli.js mobile job update ' + servicename + ' foobar -u hour -i 2 -a enabled --json').split(' ');
@@ -282,7 +282,7 @@ suite('azure mobile', function(){
       checkScopes(scopes);
       done();
     });
-  });   
+  });
 
   test('job list --json (contains updated scheduled job)', function(done) {
     var cmd = ('node cli.js mobile job list ' + servicename + ' --json').split(' ');
@@ -298,7 +298,7 @@ suite('azure mobile', function(){
       checkScopes(scopes);
       done();
     });
-  });    
+  });
 
   test('job delete ' + servicename + ' foobar --json (delete scheduled job)', function(done) {
     var cmd = ('node cli.js mobile job delete ' + servicename + ' foobar --json').split(' ');
@@ -309,7 +309,7 @@ suite('azure mobile', function(){
       checkScopes(scopes);
       done();
     });
-  });   
+  });
 
   test('job list --json (contains no scheduled jobs after deletion)', function(done) {
     var cmd = ('node cli.js mobile job list ' + servicename + ' --json').split(' ');
@@ -321,7 +321,7 @@ suite('azure mobile', function(){
       checkScopes(scopes);
       done();
     });
-  });    
+  });
 
   test('config list ' + servicename + ' --json (default config)', function(done) {
     var cmd = ('node cli.js mobile config list ' + servicename + ' --json').split(' ');
@@ -382,7 +382,7 @@ suite('azure mobile', function(){
       checkScopes(scopes);
       done();
     });
-  });  
+  });
 
   test('config set ' + servicename + ' apns dev:foobar:' + __dirname + '/mobile/cert.pfx --json (set apns certificate)', function(done) {
     var cmd = ('node cli.js mobile config set ' + servicename + ' apns dev:foobar:"' + __dirname + '/mobile/cert.pfx" --json').split(' ');
@@ -393,7 +393,7 @@ suite('azure mobile', function(){
       checkScopes(scopes);
       done();
     });
-  });    
+  });
 
   test('config get ' + servicename + ' apns --json (apns certificate was set)', function(done) {
     var cmd = ('node cli.js mobile config get ' + servicename + ' apns --json').split(' ');
@@ -405,7 +405,7 @@ suite('azure mobile', function(){
       checkScopes(scopes);
       done();
     });
-  });       
+  });
 
   test('table list ' + servicename + ' --json (no tables by default)', function(done) {
     var cmd = ('node cli.js mobile table list ' + servicename + ' --json').split(' ');
@@ -631,7 +631,7 @@ suite('azure mobile', function(){
       checkScopes(scopes);
       done();
     });
-  });    
+  });
 
   test('script list ' + servicename + ' --json (no scripts by default)', function(done) {
     var cmd = ('node cli.js mobile script list ' + servicename + ' --json').split(' ');
@@ -648,7 +648,10 @@ suite('azure mobile', function(){
   });
 
   test('script upload ' + servicename + ' table/table1.insert -f ' + __dirname + '/mobile/table1.insert.js --json (upload one script)', function(done) {
-    var cmd = ('node cli.js mobile script upload ' + servicename + ' table/table1.insert -f "' + __dirname + '/mobile/table1.insert.js" --json').split(' ');
+    var cmd = ('node cli.js mobile script upload ' + servicename + ' table/table1.insert -f ').split(' ');
+    cmd.push('"' + __dirname + '/mobile/table1.insert.js"');
+    cmd.push('--json');
+
     var scopes = setupNock(cmd);
     executeCmd(cmd, function (result) {
       result.errorText.should.equal('');
