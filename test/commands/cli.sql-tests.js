@@ -13,82 +13,70 @@
 * limitations under the License.
 */
 
-suite('cli', function() {
-  suite('storage', function() {
-    teardown(function (done) {
-      function deleteUsedStorage (storages) {
-        if (storages.length > 0) {
-          var storage = storages.pop();
+var _ = require('underscore');
 
-          var cmd = ('node cli.js account storage delete ' + storage + ' --json').split(' ');
+var should = require('should');
+var mocha = require('mocha');
+
+var executeCmd = require('../framework/cli-executor').execute;
+
+describe('CLI', function () {
+  describe('SQL Commandlets', function () {
+    var oldServerNames;
+
+    before(function (done) {
+      var cmd = ('node cli.js sql server list --json').split(' ');
+      executeCmd(cmd, function (result) {
+        oldServerNames = JSON.parse(result.text).map(function (server) {
+          return server.Name;
+        });
+
+        done();
+      });
+    });
+
+    after(function (done) {
+      function deleteUsedServers (serverNames) {
+        if (serverNames.length > 0) {
+          var serverName = serverNames.pop();
+
+          var cmd = ('node cli.js sql server delete ' + serverName + ' --json').split(' ');
           executeCmd(cmd, function (result) {
-            deleteUsedStorage(storages);
+            deleteUsedServers(serverNames);
           });
         } else {
           done();
         }
       };
 
-      // Remove any existing repository hooks
-      deleteUsedStorage(storageNames.slice(0));
-    });
-
-    test('storage create', function(done) {
-      var storageName = storageNames[0];
-
-      var cmd = ('node cli.js account storage create ' + storageName + ' --json --location').split(' ');
-      cmd.push('West US');
+      var cmd = ('node cli.js sql server list --json').split(' ');
       executeCmd(cmd, function (result) {
-        result.text.should.equal('');
-        result.exitStatus.should.equal(0);
+        var servers = JSON.parse(result.text);
 
-        done();
-      });
-    });
-
-    test('storage list', function(done) {
-      var storageName = storageNames[0];
-
-      var cmd = ('node cli.js account storage create ' + storageName + ' --json --location').split(' ');
-      cmd.push('West US');
-      executeCmd(cmd, function (result) {
-        result.text.should.equal('');
-        result.exitStatus.should.equal(0);
-
-        var cmd = ('node cli.js account storage list --json').split(' ');
-        executeCmd(cmd, function (result) {
-          var storageAccounts = JSON.parse(result.text);
-          storageAccounts.some(function (account) {
-            return account.ServiceName === storageName;
-          }).should.be.true;
-
-          done();
+        var usedServers = [ ];
+        _.each(servers, function (server) {
+          if (!_.contains(oldServerNames, server.Name)) {
+            usedServers.push(server.Name);
+          }
         });
+
+        deleteUsedServers(usedServers);
       });
     });
 
-    test('storage update', function(done) {
-      var storageName = storageNames[0];
-
-      var cmd = ('node cli.js account storage create ' + storageName + ' --json --location').split(' ');
-      cmd.push('West US');
-      executeCmd(cmd, function (result) {
-        result.text.should.equal('');
-        result.exitStatus.should.equal(0);
-
-        var cmd = ('node cli.js account storage update ' + storageName + ' --label test --json').split(' ');
+    describe('Create SQL Server', function () {
+      it('should create a server', function (done) {
+        done();
+        /*
+        var cmd = ('node cli.js sql server create ' + storageName + ' --json --location').split(' ');
+        cmd.push('West US');
         executeCmd(cmd, function (result) {
           result.text.should.equal('');
           result.exitStatus.should.equal(0);
 
-          var cmd = ('node cli.js account storage show ' + storageName + ' --json').split(' ');
-          executeCmd(cmd, function (result) {
-            var storageAccount = JSON.parse(result.text);
-            new Buffer(storageAccount.StorageServiceProperties.Label, 'base64').toString('ascii').should.equal('test');
-
-            done();
-          });
+          done();
         });
+*/
       });
     });
   });
