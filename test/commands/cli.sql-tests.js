@@ -22,11 +22,16 @@ var executeCmd = require('../framework/cli-executor').execute;
 
 describe('CLI', function () {
   describe('SQL Commandlets', function () {
+    var administratorLogin = 'azuresdk';
+    var administratorLoginPassword = 'PassWord!1';
+    var location = 'West US';
+
     var oldServerNames;
 
     before(function (done) {
       var cmd = ('node cli.js sql server list --json').split(' ');
       executeCmd(cmd, function (result) {
+
         oldServerNames = JSON.parse(result.text).map(function (server) {
           return server.Name;
         });
@@ -35,12 +40,13 @@ describe('CLI', function () {
       });
     });
 
+
     after(function (done) {
       function deleteUsedServers (serverNames) {
         if (serverNames.length > 0) {
           var serverName = serverNames.pop();
 
-          var cmd = ('node cli.js sql server delete ' + serverName + ' --json').split(' ');
+          var cmd = ('node cli.js sql server remove ' + serverName + ' --json').split(' ');
           executeCmd(cmd, function (result) {
             deleteUsedServers(serverNames);
           });
@@ -66,17 +72,69 @@ describe('CLI', function () {
 
     describe('Create SQL Server', function () {
       it('should create a server', function (done) {
-        done();
-        /*
-        var cmd = ('node cli.js sql server create ' + storageName + ' --json --location').split(' ');
-        cmd.push('West US');
+        var cmd = ('node cli.js sql server create').split(' ');
+        cmd.push(administratorLogin);
+        cmd.push(administratorLoginPassword);
+        cmd.push(location);
+
         executeCmd(cmd, function (result) {
-          result.text.should.equal('');
+          result.text.should.not.be.null;
           result.exitStatus.should.equal(0);
 
           done();
         });
-*/
+      });
+    });
+
+    describe('List and show SQL Server', function () {
+      var serverName;
+
+      before(function (done) {
+        var cmd = ('node cli.js sql server create').split(' ');
+        cmd.push(administratorLogin);
+        cmd.push(administratorLoginPassword);
+        cmd.push(location);
+        cmd.push('--json');
+
+        executeCmd(cmd, function (result) {
+          result.text.should.not.be.null;
+          result.exitStatus.should.equal(0);
+
+          serverName = JSON.parse(result.text).Name;
+
+          done();
+        });
+      });
+
+      it('should show the server', function (done) {
+        var cmd = ('node cli.js sql server show ' + serverName).split(' ');
+        executeCmd(cmd, function (result) {
+          result.text.should.not.be.null;
+          result.exitStatus.should.equal(0);
+
+          var server = JSON.parse(result.text);
+          server.Name.should.equal(serverName);
+          server.AdministratorLogin.should.equal(administratorLogin);
+          server.Location.should.equal(location);
+
+          done();
+        });
+      });
+
+      it('should list the server', function (done) {
+        var cmd = ('node cli.js sql server list').split(' ');
+        executeCmd(cmd, function (result) {
+          result.text.should.not.be.null;
+          result.exitStatus.should.equal(0);
+
+          var servers = JSON.parse(result.text);
+
+          should.exist(servers.filter(function (server) {
+            return server.Name === serverName;
+          }));
+
+          done();
+        });
       });
     });
   });
