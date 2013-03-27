@@ -1,0 +1,610 @@
+
+> azure-cli@0.6.13 test /Users/andrerod/workspace/azure-sdk-tools-xplat
+> node test/runci.js testlist.txt
+
+<?xml version="1.0" encoding="utf-8"?>
+<jslint>
+	<file name="lib/cli.js">
+		<issue line="670" char="33" reason="&apos;categoryHelpInformation&apos; was used before it was defined." evidence="function categoryHelpInformation() {" />
+		<issue line="679" char="32" reason="&apos;commandHelpInformation&apos; was used before it was defined." evidence="function commandHelpInformation() {" />
+		<issue line="688" char="24" reason="&apos;helpCategories&apos; was used before it was defined." evidence="function helpCategories(parent) {" />
+		<issue line="693" char="5" reason="The body of a for in should be wrapped in an if statement to filter unwanted properties from the prototype." evidence="    for (var index in cat.commands) {" />
+		<issue line="698" char="5" reason="The body of a for in should be wrapped in an if statement to filter unwanted properties from the prototype." evidence="    for (var subCat in cat.categories) {" />
+		<issue line="689" char="3" reason="The body of a for in should be wrapped in an if statement to filter unwanted properties from the prototype." evidence="  for (var name in parent.categories) {" />
+		<issue line="705" char="31" reason="&apos;helpCategoriesSummary&apos; was used before it was defined." evidence="function helpCategoriesSummary(root) {" />
+		<issue line="708" char="5" reason="The body of a for in should be wrapped in an if statement to filter unwanted properties from the prototype." evidence="    for (var name in parent.categories) {" />
+		<issue line="733" char="22" reason="&apos;helpCommands&apos; was used before it was defined." evidence="function helpCommands(parent) {" />
+		<issue line="741" char="21" reason="&apos;helpOptions&apos; was used before it was defined." evidence="function helpOptions(cmd, cmdExtra) {" />
+		<issue line="894" char="22" reason="&apos;checkVersion&apos; was used before it was defined." evidence="function checkVersion() {" />
+	</file>
+	<file name="lib/commands/account.js">
+		<issue line="150" char="7" reason="Inner functions should be listed at the top of the outer function." evidence="      function processSettings(file, settings) {" />
+		<issue line="150" char="31" reason="&apos;processSettings&apos; was used before it was defined." evidence="      function processSettings(file, settings) {" />
+		<issue line="169" char="11" reason="The body of a for in should be wrapped in an if statement to filter unwanted properties from the prototype." evidence="          for (var index in subs) {" />
+		<issue line="319" char="33" reason="Missing &apos;new&apos; prefix when invoking a constructor." evidence="              row.cell(&apos;Label&apos;, Buffer(item.Label, &apos;base64&apos;).toString());" />
+		<issue line="388" char="9" reason="The body of a for in should be wrapped in an if statement to filter unwanted properties from the prototype." evidence="        for (var s in subs) {" />
+		<issue line="369" char="9" reason="&apos;callback&apos; is not defined." evidence="        callback(err);" />
+		<issue line="257" char="127" reason="&apos;response&apos; is defined but never used." evidence="      utils.doServiceManagementOperation(channel, &apos;createAffinityGroup&apos;, name, affinityGroupOptions, function (error, response) {" />
+		<issue line="294" char="105" reason="&apos;response&apos; is defined but never used." evidence="      utils.doServiceManagementOperation(channel, &apos;deleteAffinityGroup&apos;, name, function (error, response) {" />
+	</file>
+	<file name="lib/commands/mobile.js">
+		<issue line="872" char="6" reason="Expected &apos;}&apos; to have an indentation at 3 instead at 6." evidence="  ~*/}).toString().match(/[^\n]\n([^\~]*)/)[1];" />
+		<issue line="864" char="48" reason="Wrapping non-IIFE function literals in parens is unnecessary." evidence="  var createMobileServiceApplicationTemplate = (function () {/*" />
+		<issue line="1093" char="81" reason="Trailing whitespace." evidence="        .execute(function (servicename, username, password, options, callback) {     " />
+		<issue line="1104" char="38" reason="&apos;getDefaultLocation&apos; was used before it was defined." evidence="          function getDefaultLocation() {" />
+		<issue line="1118" char="35" reason="&apos;ensuredLocation&apos; was used before it was defined." evidence="          function ensuredLocation(location) {" />
+		<issue line="1128" char="40" reason="&apos;ensuredServiceName&apos; was used before it was defined." evidence="            function ensuredServiceName(servicename) {" />
+		<issue line="1137" char="38" reason="&apos;promptUsername&apos; was used before it was defined." evidence="              function promptUsername() {" />
+		<issue line="1149" char="39" reason="&apos;ensuredUsername&apos; was used before it was defined." evidence="              function ensuredUsername(username) {" />
+		<issue line="1161" char="40" reason="&apos;promptPassword&apos; was used before it was defined." evidence="                function promptPassword() {" />
+		<issue line="1172" char="41" reason="&apos;ensuredPassword&apos; was used before it was defined." evidence="                function ensuredPassword(password) {" />
+		<issue line="1194" char="35" reason="Trailing whitespace." evidence="            [ new RegExp(&apos;[A-Z]&apos;), " />
+		<issue line="1195" char="35" reason="Trailing whitespace." evidence="              new RegExp(&apos;[a-z]&apos;), " />
+		<issue line="1196" char="35" reason="Trailing whitespace." evidence="              new RegExp(&apos;[0-9]&apos;), " />
+		<issue line="1216" char="14" reason="Trailing whitespace." evidence="            }            " />
+		<issue line="1261" char="38" reason="&apos;ensuredServiceName&apos; was used before it was defined." evidence="          function ensuredServiceName(servicename) {" />
+		<issue line="1285" char="33" reason="&apos;doProceed&apos; was used before it was defined." evidence="              function doProceed(decision) {" />
+		<issue line="1381" char="48" reason="Trailing whitespace." evidence="        .execute(function (options, callback) {          " />
+		<issue line="1394" char="133" reason="Strings must use singlequote." evidence="              log.info(&quot;No mobile services created yet. You can create new mobile services using the &apos;azure mobile create&apos; command.&quot;);" />
+		<issue line="1413" char="38" reason="&apos;ensuredServiceName&apos; was used before it was defined." evidence="          function ensuredServiceName(servicename) {" />
+		<issue line="1524" char="38" reason="&apos;ensuredServiceName&apos; was used before it was defined." evidence="          function ensuredServiceName(servicename) {" />
+		<issue line="1536" char="1" reason="Trailing whitespace." evidence="              " />
+		<issue line="1558" char="31" reason="&apos;ensuredType&apos; was used before it was defined." evidence="          function ensuredType(type) {" />
+		<issue line="1564" char="1" reason="Trailing whitespace." evidence="            " />
+		<issue line="1571" char="40" reason="&apos;ensuredServiceName&apos; was used before it was defined." evidence="            function ensuredServiceName(servicename) {" />
+		<issue line="1583" char="1" reason="Trailing whitespace." evidence="                " />
+		<issue line="1606" char="38" reason="&apos;ensuredServiceName&apos; was used before it was defined." evidence="          function ensuredServiceName(servicename) {" />
+		<issue line="1620" char="21" reason="The body of a for in should be wrapped in an if statement to filter unwanted properties from the prototype." evidence="                    for (var i in entry) {" />
+		<issue line="1633" char="1" reason="Trailing whitespace." evidence="              " />
+		<issue line="1654" char="38" reason="&apos;ensuredServiceName&apos; was used before it was defined." evidence="          function ensuredServiceName(servicename) {" />
+		<issue line="1690" char="101" reason="Trailing whitespace." evidence="                    settings.dynamicSchemaEnabled = results.service.dynamicSchemaEnabled.toString();  " />
+		<issue line="1803" char="35" reason="&apos;parseAndSetApnsSettings&apos; was used before it was defined." evidence="  function parseAndSetApnsSettings(options, value, callback) {" />
+		<issue line="1832" char="13" reason="The body of a for in should be wrapped in an if statement to filter unwanted properties from the prototype." evidence="            for (var i in getConfigHandlers) {" />
+		<issue line="1905" char="13" reason="The body of a for in should be wrapped in an if statement to filter unwanted properties from the prototype." evidence="            for (var i in getConfigHandlers) {" />
+		<issue line="1951" char="38" reason="&apos;ensuredServiceName&apos; was used before it was defined." evidence="          function ensuredServiceName(servicename) {" />
+		<issue line="1988" char="38" reason="&apos;ensuredServiceName&apos; was used before it was defined." evidence="          function ensuredServiceName(servicename) {" />
+		<issue line="1997" char="38" reason="&apos;ensuredTableName&apos; was used before it was defined." evidence="            function ensuredTableName(tablename) {" />
+		<issue line="2040" char="54" reason="Trailing whitespace." evidence="                      row.cell(&apos;Permissions&apos;, &apos;N/A&apos;); " />
+		<issue line="2146" char="38" reason="&apos;ensuredServiceName&apos; was used before it was defined." evidence="          function ensuredServiceName(servicename) {" />
+		<issue line="2155" char="38" reason="&apos;ensuredTableName&apos; was used before it was defined." evidence="            function ensuredTableName(tablename) {" />
+		<issue line="2201" char="38" reason="&apos;ensuredServiceName&apos; was used before it was defined." evidence="          function ensuredServiceName(servicename) {" />
+		<issue line="2210" char="38" reason="&apos;ensuredTableName&apos; was used before it was defined." evidence="            function ensuredTableName(tablename) {" />
+		<issue line="2218" char="33" reason="&apos;doProceed&apos; was used before it was defined." evidence="              function doProceed(decision) {" />
+		<issue line="2332" char="38" reason="&apos;ensuredServiceName&apos; was used before it was defined." evidence="          function ensuredServiceName(servicename) {" />
+		<issue line="2341" char="38" reason="&apos;ensuredTableName&apos; was used before it was defined." evidence="            function ensuredTableName(tablename) {" />
+		<issue line="2350" char="32" reason="&apos;doDelete&apos; was used before it was defined." evidence="              function doDelete(decision) {" />
+		<issue line="2391" char="38" reason="&apos;ensuredServiceName&apos; was used before it was defined." evidence="          function ensuredServiceName(servicename) {" />
+		<issue line="2400" char="38" reason="&apos;ensuredTableName&apos; was used before it was defined." evidence="            function ensuredTableName(tablename) {" />
+		<issue line="2411" char="55" reason="Strings must use singlequote." evidence="                  log.info(&quot;No matching records found&quot;);" />
+		<issue line="2415" char="21" reason="The body of a for in should be wrapped in an if statement to filter unwanted properties from the prototype." evidence="                    for (var i in record) {" />
+		<issue line="2422" char="21" reason="The body of a for in should be wrapped in an if statement to filter unwanted properties from the prototype." evidence="                    for (var i in s) {" />
+		<issue line="2422" char="21" reason="Too many errors. (76% scanned)." evidence="" />
+	</file>
+	<file name="lib/commands/portal.js">
+		<issue line="24" char="34" reason="Strings must use singlequote." evidence="    .option(&quot;-r, --realm &lt;realm&gt;&quot;, &quot;specifies organization used for login&quot;)" />
+		<issue line="24" char="75" reason="Strings must use singlequote." evidence="    .option(&quot;-r, --realm &lt;realm&gt;&quot;, &quot;specifies organization used for login&quot;)" />
+		<issue line="34" char="4" reason="Expected &apos;}&apos; to have an indentation at 5 instead at 4." evidence="   });" />
+		<issue line="32" char="7" reason="&apos;targetUrl&apos; is not defined." evidence="      targetUrl = url.format(href);" />
+		<issue line="33" char="33" reason="&apos;targetUrl&apos; is not defined." evidence="      interaction.launchBrowser(targetUrl);" />
+		<issue line="21" char="10" reason="&apos;log&apos; is defined but never used." evidence="  var log = cli.output;" />
+		<issue line="25" char="34" reason="&apos;_&apos; is defined but never used." evidence="    .execute(function (options, _) {" />
+	</file>
+	<file name="lib/commands/service.js">
+		<issue line="79" char="1" reason="Trailing whitespace." evidence="  " />
+		<issue line="17" char="7" reason="&apos;fs&apos; is defined but never used." evidence="var fs = require(&apos;fs&apos;);" />
+		<issue line="18" char="10" reason="&apos;azure&apos; is defined but never used." evidence="var azure = require(&apos;azure&apos;);" />
+		<issue line="65" char="105" reason="&apos;response&apos; is defined but never used." evidence="      utils.doServiceManagementOperation(channel, &apos;deleteHostedService&apos;, name, function (error, response) {" />
+		<issue line="73" char="47" reason="&apos;callback&apos; is defined but never used." evidence="    .execute(function (name, options, callback) {" />
+	</file>
+	<file name="lib/commands/storage.js">
+		<issue line="55" char="35" reason="Missing &apos;new&apos; prefix when invoking a constructor." evidence="                row.cell(&apos;Label&apos;, Buffer(storageServiceProperties.Label, &apos;base64&apos;).toString());" />
+		<issue line="59" char="72" reason="Trailing whitespace." evidence="              row.cell(&apos;Location&apos;, storageServiceProperties.Location || " />
+		<issue line="60" char="67" reason="Trailing whitespace." evidence="                  (storageServiceProperties.AffinityGroup || &apos;&apos;) + " />
+		<issue line="97" char="15" reason="Expected &apos;}&apos; to have an indentation at 13 instead at 15." evidence="              }" />
+		<issue line="254" char="5" reason="The body of a for in should be wrapped in an if statement to filter unwanted properties from the prototype." evidence="    for (var property in cleaned) {" />
+		<issue line="16" char="7" reason="&apos;fs&apos; is defined but never used." evidence="var fs = require(&apos;fs&apos;);" />
+		<issue line="17" char="9" reason="&apos;path&apos; is defined but never used." evidence="var path = require(&apos;path&apos;);" />
+		<issue line="18" char="8" reason="&apos;url&apos; is defined but never used." evidence="var url = require(&apos;url&apos;);" />
+		<issue line="19" char="11" reason="&apos;crypto&apos; is defined but never used." evidence="var crypto = require(&apos;crypto&apos;);" />
+		<issue line="20" char="12" reason="&apos;pfx2pem&apos; is defined but never used." evidence="var pfx2pem = require(&apos;../util/certificates/pkcs&apos;).pfx2pem;" />
+		<issue line="21" char="12" reason="&apos;Channel&apos; is defined but never used." evidence="var Channel = require(&apos;../channel&apos;);" />
+		<issue line="22" char="10" reason="&apos;async&apos; is defined but never used." evidence="var async = require(&apos;async&apos;);" />
+		<issue line="24" char="15" reason="&apos;cacheUtils&apos; is defined but never used." evidence="var cacheUtils = require(&apos;../cacheUtils&apos;);" />
+		<issue line="26" char="26" reason="&apos;linkedRevisionControl&apos; is defined but never used." evidence="var linkedRevisionControl = require(&apos;../util/git/linkedrevisioncontrol&apos;);" />
+		<issue line="126" char="122" reason="&apos;response&apos; is defined but never used." evidence="      utils.doServiceManagementOperation(channel, &apos;createStorageAccount&apos;, name, storageOptions, function (error, response) {" />
+		<issue line="150" char="122" reason="&apos;response&apos; is defined but never used." evidence="      utils.doServiceManagementOperation(channel, &apos;updateStorageAccount&apos;, name, storageOptions, function (error, response) {" />
+		<issue line="165" char="106" reason="&apos;response&apos; is defined but never used." evidence="      utils.doServiceManagementOperation(channel, &apos;deleteStorageAccount&apos;, name, function (error, response) {" />
+		<issue line="216" char="120" reason="&apos;response&apos; is defined but never used." evidence="      utils.doServiceManagementOperation(channel, &apos;regenerateStorageAccountKeys&apos;, name, type, function (error, response) {" />
+	</file>
+	<file name="lib/commands/vm.js">
+		<issue line="52" char="73" reason="Trailing whitespace." evidence="    .option(&apos;-b, --subnet-names &lt;list&gt;&apos;, &apos;comma-delimited subnet names&apos;)    " />
+		<issue line="58" char="1" reason="Trailing whitespace." evidence="        " />
+		<issue line="62" char="66" reason="Trailing whitespace." evidence="          vmSize = vmSize[0].toUpperCase() + vmSize.slice(1, 5) + " />
+		<issue line="76" char="1" reason="Trailing whitespace." evidence="      " />
+		<issue line="78" char="45" reason="Strings must use singlequote." evidence="        if (typeof options.rdp === &quot;boolean&quot;) {" />
+		<issue line="84" char="1" reason="Trailing whitespace." evidence="      " />
+		<issue line="86" char="45" reason="Strings must use singlequote." evidence="        if (typeof options.ssh === &quot;boolean&quot;) {" />
+		<issue line="92" char="1" reason="Trailing whitespace." evidence="      " />
+		<issue line="324" char="11" reason="Expected &apos;return&apos; to have an indentation at 9 instead at 11." evidence="          return callback(new Error(message));" />
+		<issue line="378" char="13" reason="Expected &apos;if&apos; to have an indentation at 11 instead at 13." evidence="            if (endpointInfoAsList.length == 5 &amp;&amp; inputEndPoint.LoadBalancerProbe.Protocol == &apos;http&apos;) {" />
+		<issue line="379" char="15" reason="Expected &apos;inputEndPoint&apos; to have an indentation at 13 instead at 15." evidence="              inputEndPoint.LoadBalancerProbe.Path = &apos;/&apos;;" />
+		<issue line="380" char="13" reason="Expected &apos;}&apos; to have an indentation at 11 instead at 13." evidence="            }" />
+		<issue line="381" char="10" reason="Expected &apos;}&apos; to have an indentation at 9 instead at 10." evidence="         } else if (keys[i] === &apos;prob_path&apos;) {" />
+		<issue line="382" char="13" reason="Expected &apos;if&apos; to have an indentation at 11 instead at 13." evidence="            if (inputEndPoint.LoadBalancerProbe.Protocol == &apos;http&apos;) {" />
+		<issue line="383" char="15" reason="Expected &apos;inputEndPoint&apos; to have an indentation at 13 instead at 15." evidence="              inputEndPoint.LoadBalancerProbe.Path = item;" />
+		<issue line="384" char="13" reason="Expected &apos;}&apos; to have an indentation at 11 instead at 13." evidence="            } else {" />
+		<issue line="385" char="15" reason="Expected &apos;logger&apos; to have an indentation at 13 instead at 15." evidence="              logger.warn(&apos;probe-path option will be ignored when probe-protocol is tcp (endpoint &apos; + (j + 1) + &apos;)&apos;);" />
+		<issue line="386" char="13" reason="Expected &apos;}&apos; to have an indentation at 11 instead at 13." evidence="            }" />
+		<issue line="387" char="10" reason="Expected &apos;}&apos; to have an indentation at 9 instead at 10." evidence="         }" />
+		<issue line="388" char="10" reason="Expected &apos;i&apos; to have an indentation at 9 instead at 10." evidence="         i++;" />
+		<issue line="437" char="1" reason="Trailing whitespace." evidence="  " />
+		<issue line="440" char="1" reason="Trailing whitespace." evidence="  " />
+		<issue line="450" char="1" reason="Trailing whitespace." evidence="  " />
+		<issue line="456" char="1" reason="Trailing whitespace." evidence="  " />
+		<issue line="474" char="1" reason="Trailing whitespace." evidence="      " />
+		<issue line="477" char="1" reason="Trailing whitespace." evidence="  " />
+		<issue line="482" char="1" reason="Trailing whitespace." evidence="  " />
+		<issue line="494" char="1" reason="Trailing whitespace." evidence="  " />
+		<issue line="512" char="1" reason="Trailing whitespace." evidence="  " />
+		<issue line="531" char="53" reason="Trailing whitespace." evidence="        var progress = cli.progress(&apos;Copying blob&apos;); " />
+		<issue line="532" char="10" reason="Expected &apos;pageBlob&apos; to have an indentation at 9 instead at 10." evidence="         pageBlob.copyBlob(sourcePath, options.sourceKey, blobUrl, storageAccountKey, function(error, blob, response) {" />
+		<issue line="541" char="7" reason="Expected &apos;var&apos; to have an indentation at 9 instead at 7." evidence="      var uploadOptions = {" />
+		<issue line="542" char="35" reason="Trailing whitespace." evidence="          verbose : cli.verbose || " />
+		<issue line="543" char="51" reason="Trailing whitespace." evidence="            logger.format().level === &apos;verbose&apos; || " />
+		<issue line="556" char="1" reason="Trailing whitespace." evidence="  " />
+		<issue line="673" char="1" reason="Trailing whitespace." evidence="      " />
+		<issue line="678" char="1" reason="Trailing whitespace." evidence="      " />
+		<issue line="715" char="3" reason="Expected &apos;function&apos; to have an indentation at 5 instead at 3." evidence="  function doCreate() {" />
+		<issue line="715" char="20" reason="&apos;doCreate&apos; was used before it was defined." evidence="  function doCreate() {" />
+		<issue line="742" char="25" reason="&apos;loadSshCert&apos; was used before it was defined." evidence="    function loadSshCert() {" />
+		<issue line="751" char="1" reason="Trailing whitespace." evidence="    " />
+		<issue line="763" char="1" reason="Trailing whitespace." evidence="      " />
+		<issue line="764" char="0" reason="Identifier &apos;createDefaultRoleWithPassword_&apos; is not in camel case." evidence="      function createDefaultRoleWithPassword_() {" />
+		<issue line="775" char="1" reason="Trailing whitespace." evidence="          " />
+		<issue line="792" char="1" reason="Trailing whitespace." evidence="              " />
+		<issue line="805" char="114" reason="Trailing whitespace." evidence="            logger.warn(&apos;Only Administrator is allowed as Windows username. You specified a different value: &quot;&apos; + " />
+		<issue line="808" char="1" reason="Trailing whitespace." evidence="          " />
+		<issue line="852" char="0" reason="Identifier &apos;createDefaultRoleEnsurePassword_&apos; is not in camel case." evidence="      function createDefaultRoleEnsurePassword_() {        " />
+		<issue line="852" char="52" reason="Trailing whitespace." evidence="      function createDefaultRoleEnsurePassword_() {        " />
+		<issue line="858" char="0" reason="Identifier &apos;createDefaultRoleWithPassword_&apos; is not in camel case." evidence="            createDefaultRoleWithPassword_();" />
+		<issue line="858" char="1" reason="Too many errors. (41% scanned)." evidence="" />
+	</file>
+	<file name="lib/communityUtil.js">
+		<issue line="34" char="23" reason="&apos;CommunityUtil&apos; was used before it was defined." evidence="function CommunityUtil() {" />
+		<issue line="35" char="0" reason="Identifier &apos;super_&apos; is not in camel case." evidence="  CommunityUtil.super_.call(this);" />
+		<issue line="37" char="3" reason="Expected &apos;SERVICEHOST&apos; to have an indentation at 5 instead at 3." evidence="	SERVICEHOST : &apos;vmdepot.msopentech.com&apos;," />
+		<issue line="38" char="3" reason="Expected &apos;SERVICE&apos; to have an indentation at 5 instead at 3." evidence="	SERVICE: &apos;/OData.svc&apos;" />
+		<issue line="108" char="1" reason="Expected &apos;}&apos; to have an indentation at 3 instead at 1." evidence="};" />
+		<issue line="117" char="1" reason="Expected &apos;}&apos; to have an indentation at 3 instead at 1." evidence="};" />
+		<issue line="17" char="9" reason="&apos;http&apos; is defined but never used." evidence="var http = require(&apos;http&apos;);" />
+	</file>
+	<file name="lib/iaas/blobserviceex.js">
+		<issue line="46" char="23" reason="&apos;BlobServiceEx&apos; was used before it was defined." evidence="function BlobServiceEx(storageAccount, storageAccessKey, host, authenticationProvider) {" />
+		<issue line="47" char="0" reason="Identifier &apos;super_&apos; is not in camel case." evidence="  BlobServiceEx.super_.call(this, storageAccount, storageAccessKey, host, authenticationProvider);" />
+		<issue line="79" char="1" reason="Trailing whitespace." evidence="  " />
+		<issue line="89" char="1" reason="Trailing whitespace." evidence=" " />
+		<issue line="95" char="1" reason="Trailing whitespace." evidence="  " />
+		<issue line="102" char="1" reason="Trailing whitespace." evidence=" " />
+		<issue line="108" char="1" reason="Trailing whitespace." evidence="  " />
+		<issue line="117" char="113" reason="Trailing whitespace." evidence="        response.copyStatus = response.headers[&apos;x-ms-copy-status&apos;] || response.headers[&apos;x-ms-copy-blob-status&apos;]; " />
+		<issue line="122" char="1" reason="Trailing whitespace." evidence="  " />
+		<issue line="149" char="1" reason="Trailing whitespace." evidence="  " />
+		<issue line="160" char="1" reason="Trailing whitespace." evidence="  " />
+		<issue line="167" char="1" reason="Trailing whitespace." evidence="   " />
+		<issue line="174" char="1" reason="Trailing whitespace." evidence="  " />
+		<issue line="178" char="113" reason="Trailing whitespace." evidence="        response.copyStatus = response.headers[&apos;x-ms-copy-status&apos;] || response.headers[&apos;x-ms-copy-blob-status&apos;]; " />
+		<issue line="182" char="1" reason="Trailing whitespace." evidence=" " />
+		<issue line="185" char="1" reason="Trailing whitespace." evidence="  " />
+		<issue line="198" char="28" reason="&apos;createResourceName&apos; was used before it was defined." evidence="function createResourceName(containerName, blobName) {" />
+		<issue line="219" char="31" reason="&apos;validateContainerName&apos; was used before it was defined." evidence="function validateContainerName(containerName) {" />
+		<issue line="252" char="26" reason="&apos;validateBlobName&apos; was used before it was defined." evidence="function validateBlobName(containerName, blobName) {" />
+		<issue line="268" char="26" reason="&apos;validateCallback&apos; was used before it was defined." evidence="function validateCallback(callback) {" />
+		<issue line="27" char="25" reason="&apos;QueryStringConstants&apos; is defined but never used." evidence="var QueryStringConstants = Constants.QueryStringConstants;" />
+	</file>
+	<file name="lib/iaas/deleteImage.js">
+		<issue line="37" char="1" reason="Trailing whitespace." evidence="    " />
+		<issue line="39" char="6" reason="Trailing whitespace." evidence="  });  " />
+		<issue line="47" char="1" reason="Trailing whitespace." evidence="  " />
+		<issue line="70" char="1" reason="Trailing whitespace." evidence="  " />
+		<issue line="71" char="22" reason="&apos;deleteBlob&apos; was used before it was defined." evidence="  function deleteBlob(error) {" />
+		<issue line="76" char="1" reason="Trailing whitespace." evidence="  " />
+		<issue line="88" char="1" reason="Trailing whitespace." evidence="    " />
+		<issue line="99" char="4" reason="Trailing whitespace." evidence="  } " />
+		<issue line="44" char="16" reason="&apos;deleteImage&apos; is defined but never used." evidence="var deleteImage = exports.deleteImage =" />
+		<issue line="30" char="97" reason="&apos;response&apos; is defined but never used." evidence="  utils.doServiceManagementOperation(channel, &apos;delete&apos; + apiName, name, function(error, response) {" />
+	</file>
+	<file name="lib/iaas/image.js">
+		<issue line="40" char="1" reason="Trailing whitespace." evidence="      " />
+		<issue line="82" char="45" reason="Trailing whitespace." evidence="              row.cell(&apos;OS&apos;, item.OS || &apos;&apos;);             " />
+		<issue line="87" char="39" reason="Trailing whitespace." evidence="              row.cell(&apos;OS&apos;, item.OS);              " />
+		<issue line="110" char="1" reason="Trailing whitespace." evidence="    " />
+		<issue line="147" char="1" reason="Trailing whitespace." evidence="    " />
+		<issue line="163" char="1" reason="Trailing whitespace." evidence="    " />
+		<issue line="178" char="1" reason="Trailing whitespace." evidence="        " />
+		<issue line="187" char="1" reason="Trailing whitespace." evidence="    " />
+		<issue line="192" char="31" reason="Trailing whitespace." evidence="      verbose : cli.verbose || " />
+		<issue line="193" char="47" reason="Trailing whitespace." evidence="        logger.format().level === &apos;verbose&apos; || " />
+		<issue line="203" char="1" reason="Trailing whitespace." evidence="    " />
+		<issue line="211" char="1" reason="Trailing whitespace." evidence="    " />
+		<issue line="229" char="34" reason="&apos;getBlobNameAndUpload&apos; was used before it was defined." evidence="    function getBlobNameAndUpload() {" />
+		<issue line="243" char="1" reason="Trailing whitespace." evidence="    " />
+		<issue line="270" char="1" reason="Trailing whitespace." evidence="        " />
+		<issue line="271" char="84" reason="Trailing whitespace." evidence="        uploadVMImage.uploadPageBlobFromIaasClient(genBlobUrl, channel, sourcePath, " />
+		<issue line="288" char="1" reason="Trailing whitespace." evidence="    " />
+		<issue line="297" char="69" reason="Trailing whitespace." evidence="        utils.doServiceManagementOperation(channel, &apos;addDisk&apos;, name, " />
+		<issue line="303" char="79" reason="Trailing whitespace." evidence="        utils.doServiceManagementOperation(channel, &apos;createOSImage&apos;, os, name, " />
+		<issue line="313" char="19" reason="&apos;listDisks&apos; was used before it was defined." evidence="function listDisks(cli, options, cmdCallback) {" />
+		<issue line="351" char="46" reason="Trailing whitespace." evidence="          foundDisks[0].LogicalDiskSizeInGB = " />
+		<issue line="28" char="12" reason="&apos;OSIMAGE&apos; is defined but never used." evidence="var OSIMAGE = exports.OSIMAGE = 1;" />
+		<issue line="299" char="60" reason="&apos;response&apos; is defined but never used." evidence="            options2.imageOptions, function(error, response) {" />
+		<issue line="305" char="60" reason="&apos;response&apos; is defined but never used." evidence="            options2.imageOptions, function(error, response) {" />
+	</file>
+	<file name="lib/iaas/upload/blobInfo.js">
+		<issue line="33" char="24" reason="Trailing whitespace." evidence="  exports.getBlobInfo = " />
+		<issue line="43" char="10" reason="Expected &apos;error&apos; to have an indentation at 11 instead at 10." evidence="         error.statusCode = resp.statusCode;" />
+		<issue line="44" char="10" reason="Expected &apos;error&apos; to have an indentation at 11 instead at 10." evidence="         error.response = resp;" />
+		<issue line="66" char="17" reason="Trailing whitespace." evidence="    if (range &amp;&amp; " />
+		<issue line="67" char="33" reason="Trailing whitespace." evidence="        result.blobProperties &amp;&amp; " />
+		<issue line="92" char="65" reason="Trailing whitespace." evidence="        blobService.getBlobToStream(container, blobName, stream, " />
+		<issue line="101" char="1" reason="Trailing whitespace." evidence="      " />
+		<issue line="102" char="6" reason="Trailing whitespace." evidence="    }  " />
+		<issue line="105" char="1" reason="Trailing whitespace." evidence="  " />
+		<issue line="107" char="52" reason="Trailing whitespace." evidence="    var lbrAgg = agg.getCallback(&apos;listBlobRegion&apos;);  " />
+		<issue line="109" char="1" reason="Trailing whitespace." evidence="   " />
+		<issue line="117" char="1" reason="Trailing whitespace." evidence="  " />
+		<issue line="122" char="4" reason="Trailing whitespace." evidence="  }  " />
+		<issue line="32" char="16" reason="&apos;getBlobInfo&apos; is defined but never used." evidence="var getBlobInfo =" />
+		<issue line="93" char="60" reason="&apos;response&apos; is defined but never used." evidence="            getOptions, function(error, blockBlob, response) {" />
+	</file>
+	<file name="lib/iaas/upload/bufferStream.js">
+		<issue line="24" char="30" reason="Trailing whitespace." evidence="var createBufferWriteStream = " />
+		<issue line="25" char="36" reason="Trailing whitespace." evidence="  exports.createBufferWriteStream = " />
+		<issue line="27" char="1" reason="Trailing whitespace." evidence="  " />
+		<issue line="38" char="1" reason="Trailing whitespace." evidence="  " />
+		<issue line="24" char="28" reason="&apos;createBufferWriteStream&apos; is defined but never used." evidence="var createBufferWriteStream = " />
+	</file>
+	<file name="lib/iaas/upload/intSet.js">
+		<issue line="26" char="19" reason="Trailing whitespace." evidence="var createIntSet = " />
+		<issue line="27" char="25" reason="Trailing whitespace." evidence="  exports.createIntSet = " />
+		<issue line="29" char="1" reason="Trailing whitespace." evidence="  " />
+		<issue line="31" char="1" reason="Trailing whitespace." evidence="  " />
+		<issue line="33" char="1" reason="Trailing whitespace." evidence="    " />
+		<issue line="37" char="1" reason="Trailing whitespace." evidence="  " />
+		<issue line="42" char="115" reason="Trailing whitespace." evidence="        throw new Error(&apos;intSet.createIntSet(ranges): incorrectly formed or intersected with previous interval &apos; + " />
+		<issue line="52" char="1" reason="Trailing whitespace." evidence="  " />
+		<issue line="54" char="5" reason="The body of a for in should be wrapped in an if statement to filter unwanted properties from the prototype." evidence="    for (var i in ranges) {" />
+		<issue line="58" char="1" reason="Trailing whitespace." evidence="  " />
+		<issue line="64" char="1" reason="Trailing whitespace." evidence="  " />
+		<issue line="70" char="1" reason="Trailing whitespace." evidence="  " />
+		<issue line="74" char="1" reason="Trailing whitespace." evidence="  " />
+		<issue line="77" char="6" reason="Expected &apos;if&apos; to have an indentation at 7 instead at 6." evidence="     if (intersects2(v[i].start, v[i].end, start, end))" />
+		<issue line="78" char="8" reason="Expected &apos;return&apos; to have an indentation at 9 instead at 8." evidence="       return true;" />
+		<issue line="82" char="1" reason="Trailing whitespace." evidence="  " />
+		<issue line="91" char="8" reason="Expected &apos;if&apos; to have an indentation at 7 instead at 8." evidence="       if (v[i].start &gt; end || v[i].end &lt; start) {" />
+		<issue line="92" char="10" reason="Expected &apos;continue&apos; to have an indentation at 9 instead at 10." evidence="         continue;" />
+		<issue line="93" char="8" reason="Expected &apos;}&apos; to have an indentation at 7 instead at 8." evidence="       }" />
+		<issue line="94" char="8" reason="Expected &apos;if&apos; to have an indentation at 7 instead at 8." evidence="       if (v[i].start &gt;= start &amp;&amp; v[i].end &lt;= end) {" />
+		<issue line="96" char="10" reason="Expected &apos;v&apos; to have an indentation at 9 instead at 10." evidence="         v.splice(i, 1);" />
+		<issue line="97" char="10" reason="Expected &apos;continue&apos; to have an indentation at 9 instead at 10." evidence="         continue;" />
+		<issue line="128" char="4" reason="Expected &apos;}&apos; to have an indentation at 3 instead at 4." evidence="   } " />
+		<issue line="128" char="5" reason="Trailing whitespace." evidence="   } " />
+		<issue line="132" char="4" reason="Trailing whitespace." evidence="  } " />
+		<issue line="137" char="1" reason="Trailing whitespace." evidence="   " />
+		<issue line="138" char="11" reason="Trailing whitespace." evidence="  return {  " />
+		<issue line="26" char="17" reason="&apos;createIntSet&apos; is defined but never used." evidence="var createIntSet = " />
+	</file>
+	<file name="lib/iaas/upload/jobTracker.js">
+		<issue line="25" char="20" reason="Trailing whitespace." evidence="var getJobTracker = " />
+		<issue line="26" char="26" reason="Trailing whitespace." evidence="  exports.getJobTracker = " />
+		<issue line="28" char="1" reason="Trailing whitespace." evidence="  " />
+		<issue line="32" char="1" reason="Trailing whitespace." evidence="  " />
+		<issue line="39" char="1" reason="Trailing whitespace." evidence="  " />
+		<issue line="73" char="1" reason="Trailing whitespace." evidence="      " />
+		<issue line="74" char="3" reason="Expected &apos;}&apos; to have an indentation at 5 instead at 3." evidence="  };" />
+		<issue line="25" char="18" reason="&apos;getJobTracker&apos; is defined but never used." evidence="var getJobTracker = " />
+		<issue line="56" char="32" reason="&apos;doneIndex&apos; is defined but never used." evidence="      done : function(doneIndex) {" />
+	</file>
+	<file name="lib/iaas/upload/pageBlob.js">
+		<issue line="48" char="25" reason="Trailing whitespace." evidence="function compare(a, b) { " />
+		<issue line="68" char="1" reason="Expected &apos;}&apos; to have an indentation at 3 instead at 1." evidence="}" />
+		<issue line="96" char="1" reason="Trailing whitespace." evidence="    " />
+		<issue line="97" char="25" reason="&apos;checkStatus&apos; was used before it was defined." evidence="    function checkStatus(error, blob, response) {" />
+		<issue line="110" char="2" reason="Expected &apos;}&apos; to have an indentation at 1 instead at 2." evidence=" };" />
+		<issue line="112" char="2" reason="Expected &apos;var&apos; to have an indentation at 1 instead at 2." evidence=" var signBlobUri =" />
+		<issue line="112" char="18" reason="&apos;signBlobUri&apos; was used before it was defined." evidence=" var signBlobUri =" />
+		<issue line="115" char="4" reason="Expected &apos;var&apos; to have an indentation at 5 instead at 4." evidence="   var splitUri = splitDestinationUri(uri);" />
+		<issue line="116" char="4" reason="Expected &apos;if&apos; to have an indentation at 5 instead at 4." evidence="   if (!splitUri.accountName || !splitUri.blobName) {" />
+		<issue line="117" char="6" reason="Expected &apos;throw&apos; to have an indentation at 7 instead at 6." evidence="     throw new Error(&apos;The uri is not well formed :&apos; + uri);" />
+		<issue line="118" char="4" reason="Expected &apos;}&apos; to have an indentation at 5 instead at 4." evidence="   }" />
+		<issue line="120" char="4" reason="Expected &apos;var&apos; to have an indentation at 5 instead at 4." evidence="   var leftPadTwo = function (n) {" />
+		<issue line="121" char="6" reason="Expected &apos;return&apos; to have an indentation at 7 instead at 6." evidence="     return (n &lt; 10 ? &apos;0&apos; : &apos;&apos;) + n;" />
+		<issue line="122" char="4" reason="Expected &apos;}&apos; to have an indentation at 5 instead at 4." evidence="   };" />
+		<issue line="124" char="4" reason="Expected &apos;function&apos; to have an indentation at 5 instead at 4." evidence="   function _toUTC(date) {" />
+		<issue line="125" char="6" reason="Expected &apos;return&apos; to have an indentation at 7 instead at 6." evidence="     return (date.getUTCFullYear()+&apos;-&apos; +" />
+		<issue line="131" char="4" reason="Expected &apos;}&apos; to have an indentation at 5 instead at 4." evidence="   }" />
+		<issue line="133" char="4" reason="Expected &apos;if&apos; to have an indentation at 5 instead at 4." evidence="   if (storageAccountKey) {" />
+		<issue line="134" char="6" reason="Expected &apos;var&apos; to have an indentation at 7 instead at 6." evidence="     var startDate = new Date();" />
+		<issue line="135" char="6" reason="Expected &apos;startDate&apos; to have an indentation at 7 instead at 6." evidence="     startDate.setMinutes(startDate.getMinutes() - 2);" />
+		<issue line="136" char="6" reason="Expected &apos;var&apos; to have an indentation at 7 instead at 6." evidence="     var expiryDate = new Date(startDate);" />
+		<issue line="137" char="6" reason="Expected &apos;expiryDate&apos; to have an indentation at 7 instead at 6." evidence="     expiryDate.setMinutes(startDate.getMinutes() + 60);" />
+		<issue line="138" char="6" reason="Expected &apos;var&apos; to have an indentation at 7 instead at 6." evidence="     var credentials = new SharedAccessSignature(splitUri.accountName, storageAccountKey);" />
+		<issue line="139" char="6" reason="Expected &apos;var&apos; to have an indentation at 7 instead at 6." evidence="     var sharedAccessPolicy = {" />
+		<issue line="140" char="10" reason="Expected &apos;Id&apos; to have an indentation at 9 instead at 10." evidence="         Id: null," />
+		<issue line="141" char="10" reason="Expected &apos;AccessPolicy&apos; to have an indentation at 9 instead at 10." evidence="         AccessPolicy: {" />
+		<issue line="142" char="12" reason="Expected &apos;Permissions&apos; to have an indentation at 11 instead at 12." evidence="           Permissions: BlobConstants.SharedAccessPermissions.READ," />
+		<issue line="143" char="12" reason="Expected &apos;Start&apos; to have an indentation at 11 instead at 12." evidence="           Start: _toUTC(startDate)," />
+		<issue line="144" char="12" reason="Expected &apos;Expiry&apos; to have an indentation at 11 instead at 12." evidence="           Expiry: _toUTC(expiryDate)" />
+		<issue line="145" char="10" reason="Expected &apos;}&apos; to have an indentation at 9 instead at 10." evidence="         }" />
+		<issue line="146" char="8" reason="Expected &apos;}&apos; to have an indentation at 7 instead at 8." evidence="       };" />
+		<issue line="148" char="8" reason="Expected &apos;var&apos; to have an indentation at 7 instead at 8." evidence="       var queryString = credentials.generateSignedQueryString(" />
+		<issue line="153" char="8" reason="Expected &apos;uri&apos; to have an indentation at 7 instead at 8." evidence="       uri = uri + &apos;?&apos; + qs.stringify(queryString);" />
+		<issue line="154" char="4" reason="Expected &apos;}&apos; to have an indentation at 5 instead at 4." evidence="   }" />
+		<issue line="156" char="4" reason="Expected &apos;return&apos; to have an indentation at 5 instead at 4." evidence="   return uri;" />
+		<issue line="157" char="2" reason="Expected &apos;}&apos; to have an indentation at 3 instead at 2." evidence=" };" />
+		<issue line="170" char="21" reason="Trailing whitespace." evidence="var uploadPageBlob = " />
+		<issue line="171" char="27" reason="Trailing whitespace." evidence="  exports.uploadPageBlob = " />
+		<issue line="173" char="1" reason="Trailing whitespace." evidence="  " />
+		<issue line="178" char="1" reason="Trailing whitespace." evidence="  " />
+		<issue line="184" char="17" reason="Trailing whitespace." evidence="var deleteBlob = " />
+		<issue line="191" char="1" reason="Trailing whitespace." evidence="  " />
+		<issue line="198" char="35" reason="&apos;uploadPageBlobFromBlobService&apos; was used before it was defined." evidence="var uploadPageBlobFromBlobService = " />
+		<issue line="198" char="36" reason="Trailing whitespace." evidence="var uploadPageBlobFromBlobService = " />
+		<issue line="201" char="1" reason="Trailing whitespace." evidence="  " />
+		<issue line="209" char="60" reason="Trailing whitespace." evidence="  var exitWithError = options.exitWithError || function() { " />
+		<issue line="212" char="1" reason="Trailing whitespace." evidence="  " />
+		<issue line="216" char="1" reason="Trailing whitespace." evidence="  " />
+		<issue line="219" char="83" reason="Trailing whitespace." evidence="      blobService.protocol + blobService.storageAccount + &apos;/&apos; + blobService.host + " />
+		<issue line="230" char="1" reason="Trailing whitespace." evidence="  " />
+		<issue line="230" char="1" reason="Too many errors. (32% scanned)." evidence="" />
+	</file>
+	<file name="lib/iaas/upload/streamMerger.js">
+		<issue line="29" char="18" reason="Trailing whitespace." evidence="var MergeStream = " />
+		<issue line="30" char="24" reason="Trailing whitespace." evidence="  exports.MergeStream = " />
+		<issue line="32" char="1" reason="Trailing whitespace." evidence="  " />
+		<issue line="35" char="1" reason="Trailing whitespace." evidence="  " />
+		<issue line="40" char="1" reason="Trailing whitespace." evidence="  " />
+		<issue line="52" char="1" reason="Trailing whitespace." evidence="    " />
+		<issue line="64" char="1" reason="Trailing whitespace." evidence="  " />
+		<issue line="67" char="1" reason="Trailing whitespace." evidence="  " />
+		<issue line="89" char="1" reason="Trailing whitespace." evidence="  " />
+		<issue line="97" char="1" reason="Trailing whitespace." evidence="  " />
+		<issue line="98" char="1" reason="Trailing whitespace." evidence="  " />
+		<issue line="107" char="1" reason="Trailing whitespace." evidence="  " />
+		<issue line="110" char="1" reason="Trailing whitespace." evidence="  " />
+		<issue line="117" char="56" reason="Trailing whitespace." evidence="            &apos;\ncharcounts = &apos; + util.inspect(charCount) " />
+		<issue line="127" char="1" reason="Trailing whitespace." evidence="  " />
+		<issue line="138" char="17" reason="&apos;readBit&apos; was used before it was defined." evidence="function readBit(buffer, bit) {" />
+		<issue line="139" char="21" reason="Unexpected use of &apos;&gt;&gt;&apos;." evidence="  var element = bit &gt;&gt; 3; // divide by 8 and take int part" />
+		<issue line="141" char="27" reason="Unexpected use of &apos;&gt;&gt;&apos;." evidence="  return (buffer[element] &gt;&gt; (7 - remainder)) &amp; 1;" />
+		<issue line="141" char="47" reason="Unexpected use of &apos;&amp;&apos;." evidence="  return (buffer[element] &gt;&gt; (7 - remainder)) &amp; 1;" />
+	</file>
+	<file name="lib/iaas/upload/uploadVMImage.js">
+		<issue line="30" char="1" reason="Trailing whitespace." evidence="  " />
+		<issue line="50" char="96" reason="Trailing whitespace." evidence="      if (responseProps &amp;&amp; responseProps.body &amp;&amp; responseProps.body.StorageServiceProperties &amp;&amp; " />
+		<issue line="67" char="1" reason="Trailing whitespace." evidence="  " />
+		<issue line="68" char="1" reason="Trailing whitespace." evidence="  " />
+		<issue line="72" char="1" reason="Trailing whitespace." evidence="    " />
+		<issue line="75" char="35" reason="Trailing whitespace." evidence="var uploadPageBlobFromIaasClient = " />
+		<issue line="76" char="41" reason="Trailing whitespace." evidence="  exports.uploadPageBlobFromIaasClient = " />
+		<issue line="83" char="1" reason="Trailing whitespace." evidence="  " />
+		<issue line="97" char="31" reason="Trailing whitespace." evidence="var deleteBlobFromIaasClient = " />
+		<issue line="119" char="29" reason="Trailing whitespace." evidence="var copyBlobFromIaasClient = " />
+		<issue line="120" char="35" reason="Trailing whitespace." evidence="  exports.copyBlobFromIaasClient = " />
+		<issue line="127" char="1" reason="Trailing whitespace." evidence="  " />
+		<issue line="81" char="79" reason="&apos;utils&apos; is not defined." evidence="    throw &apos;Callback is expected in uploadPageBlobFromIaasClient(). Found: &apos; + utils.inspect(callback);" />
+		<issue line="103" char="75" reason="&apos;utils&apos; is not defined." evidence="    throw &apos;Callback is expected in deleteBlobFromIaasClient(). Found: &apos; + utils.inspect(callback);" />
+		<issue line="21" char="7" reason="&apos;qs&apos; is defined but never used." evidence="var qs = require(&apos;querystring&apos;);" />
+		<issue line="75" char="33" reason="&apos;uploadPageBlobFromIaasClient&apos; is defined but never used." evidence="var uploadPageBlobFromIaasClient = " />
+		<issue line="97" char="29" reason="&apos;deleteBlobFromIaasClient&apos; is defined but never used." evidence="var deleteBlobFromIaasClient = " />
+		<issue line="119" char="27" reason="&apos;copyBlobFromIaasClient&apos; is defined but never used." evidence="var copyBlobFromIaasClient = " />
+	</file>
+	<file name="lib/iaas/upload/vhdTools.js">
+		<issue line="44" char="17" reason="Trailing whitespace." evidence="var getVHDInfo = " />
+		<issue line="47" char="1" reason="Trailing whitespace." evidence="  " />
+		<issue line="61" char="4" reason="Trailing whitespace." evidence="  }  " />
+		<issue line="63" char="7" reason="Expected &apos;throw&apos; to have an indentation at 5 instead at 7." evidence="      throw new Error(&apos;File size is not a multiple of &apos; + SECTOR_SIZE + &apos;: &apos; + size + &apos; for &apos; + fileName);" />
+		<issue line="87" char="1" reason="Trailing whitespace." evidence="    " />
+		<issue line="95" char="9" reason="Expected &apos;throw&apos; to have an indentation at 7 instead at 9." evidence="        throw new Error(&apos;File read error or wrong header : &apos; + fileName);" />
+		<issue line="97" char="1" reason="Trailing whitespace." evidence=" " />
+		<issue line="99" char="1" reason="Trailing whitespace." evidence="    " />
+		<issue line="117" char="1" reason="Trailing whitespace." evidence="    " />
+		<issue line="120" char="1" reason="Trailing whitespace." evidence="    " />
+		<issue line="131" char="1" reason="Trailing whitespace." evidence="    " />
+		<issue line="135" char="108" reason="Trailing whitespace." evidence="        throw new Error(&apos;Error in VHD processing - incorrect block index : getDynVhdRangeFromBlockIndex(&apos; + " />
+		<issue line="141" char="1" reason="Trailing whitespace." evidence="    " />
+		<issue line="142" char="29" reason="Trailing whitespace." evidence="    footer.convertToFixed();      " />
+		<issue line="144" char="1" reason="Trailing whitespace." evidence="  " />
+		<issue line="158" char="1" reason="Trailing whitespace." evidence=" " />
+		<issue line="163" char="52" reason="Trailing whitespace." evidence="      throw new Error(&apos;vhdInfo.getReadStream(): &apos; + " />
+		<issue line="164" char="77" reason="Trailing whitespace." evidence="          &apos;streamOptions.start and end + 1 values should be multiples of &apos; + " />
+		<issue line="170" char="1" reason="Trailing whitespace." evidence="    " />
+		<issue line="174" char="1" reason="Trailing whitespace." evidence="    " />
+		<issue line="179" char="1" reason="Trailing whitespace." evidence="    " />
+		<issue line="182" char="1" reason="Trailing whitespace." evidence="    " />
+		<issue line="188" char="1" reason="Trailing whitespace." evidence="    " />
+		<issue line="200" char="1" reason="Trailing whitespace." evidence="      " />
+		<issue line="203" char="1" reason="Trailing whitespace." evidence="        " />
+		<issue line="208" char="1" reason="Trailing whitespace." evidence="        " />
+		<issue line="214" char="1" reason="Trailing whitespace." evidence="        " />
+		<issue line="217" char="1" reason="Trailing whitespace." evidence="        " />
+		<issue line="219" char="1" reason="Trailing whitespace." evidence="      " />
+		<issue line="224" char="9" reason="The body of a for in should be wrapped in an if statement to filter unwanted properties from the prototype." evidence="        for (var o in streamOptions) parentOptions[o] = streamOptions[o];" />
+		<issue line="231" char="9" reason="The body of a for in should be wrapped in an if statement to filter unwanted properties from the prototype." evidence="        for (var oo in streamOptions) options[oo] = streamOptions[oo];" />
+		<issue line="235" char="1" reason="Trailing whitespace." evidence="        " />
+		<issue line="256" char="1" reason="Trailing whitespace." evidence="      " />
+		<issue line="261" char="1" reason="Trailing whitespace." evidence="      " />
+		<issue line="274" char="1" reason="Trailing whitespace." evidence="      " />
+		<issue line="286" char="1" reason="Trailing whitespace." evidence="    " />
+		<issue line="287" char="1" reason="Trailing whitespace." evidence="    " />
+		<issue line="289" char="1" reason="Trailing whitespace." evidence="    " />
+		<issue line="297" char="12" reason="Trailing whitespace." evidence="        });        " />
+		<issue line="300" char="1" reason="Trailing whitespace." evidence="        " />
+		<issue line="302" char="1" reason="Trailing whitespace." evidence="      " />
+		<issue line="306" char="46" reason="Trailing whitespace." evidence="            stream._pos - footer.currentSize, " />
+		<issue line="310" char="1" reason="Trailing whitespace." evidence="      " />
+		<issue line="317" char="1" reason="Trailing whitespace." evidence="    " />
+		<issue line="320" char="1" reason="Trailing whitespace." evidence="  " />
+		<issue line="325" char="15" reason="&apos;isAll&apos; was used before it was defined." evidence="function isAll(buf, val) {" />
+		<issue line="354" char="84" reason="Trailing whitespace." evidence="    throw new Error(&apos;The 64-bit value is too big to be represented in JS :&apos; + val);    " />
+		<issue line="359" char="22" reason="&apos;createFooter&apos; was used before it was defined." evidence="function createFooter(buf) {" />
+		<issue line="361" char="1" reason="Trailing whitespace." evidence="  " />
+		<issue line="364" char="64" reason="Trailing whitespace." evidence="    throw new Error(&apos;Unexpected VHD file format version : 0x&apos; + " />
+		<issue line="364" char="64" reason="Too many errors. (63% scanned)." evidence="" />
+	</file>
+	<file name="lib/util/certificates/der.js">
+		<issue line="21" char="22" reason="Trailing whitespace." evidence="    Decoder: Decoder, " />
+		<issue line="32" char="1" reason="Trailing whitespace." evidence="    " />
+		<issue line="34" char="1" reason="Expected &apos;}&apos; to have an indentation at 3 instead at 1." evidence="};" />
+		<issue line="36" char="17" reason="&apos;Decoder&apos; was used before it was defined." evidence="function Decoder(options) {" />
+		<issue line="40" char="1" reason="Expected &apos;}&apos; to have an indentation at 3 instead at 1." evidence="}" />
+		<issue line="48" char="9" reason="Expected &apos;var&apos; to have an indentation at 7 instead at 9." evidence="        var next = cursor.next();" />
+		<issue line="49" char="1" reason="Trailing whitespace." evidence="        " />
+		<issue line="50" char="9" reason="Expected &apos;this&apos; to have an indentation at 7 instead at 9." evidence="        this.formatter.format(next.element);        " />
+		<issue line="50" char="45" reason="Trailing whitespace." evidence="        this.formatter.format(next.element);        " />
+		<issue line="51" char="9" reason="Expected &apos;this&apos; to have an indentation at 7 instead at 9." evidence="        this.emit(&apos;element&apos;, next.element);" />
+		<issue line="52" char="9" reason="Expected &apos;cumulative&apos; to have an indentation at 7 instead at 9." evidence="        cumulative.push(next.element);" />
+		<issue line="53" char="1" reason="Trailing whitespace." evidence="        " />
+		<issue line="54" char="9" reason="Expected &apos;cursor&apos; to have an indentation at 7 instead at 9." evidence="        cursor = next.cursor;" />
+		<issue line="58" char="1" reason="Expected &apos;}&apos; to have an indentation at 3 instead at 1." evidence="};" />
+		<issue line="63" char="9" reason="Expected &apos;passed&apos; to have an indentation at 7 instead at 9." evidence="        passed = actual;" />
+		<issue line="65" char="9" reason="Expected &apos;passed&apos; to have an indentation at 7 instead at 9." evidence="        passed = actual == expected;" />
+		<issue line="68" char="9" reason="Expected &apos;throw&apos; to have an indentation at 7 instead at 9." evidence="        throw new Error(message);" />
+		<issue line="70" char="1" reason="Expected &apos;}&apos; to have an indentation at 3 instead at 1." evidence="};" />
+		<issue line="72" char="16" reason="&apos;Cursor&apos; was used before it was defined." evidence="function Cursor(buffer) {" />
+		<issue line="74" char="1" reason="Expected &apos;}&apos; to have an indentation at 3 instead at 1." evidence="}" />
+		<issue line="84" char="30" reason="Unexpected use of &apos;&gt;&gt;&apos;." evidence="    element.tagClass = (type &gt;&gt; 6) &amp; 0x03;" />
+		<issue line="84" char="36" reason="Unexpected use of &apos;&amp;&apos;." evidence="    element.tagClass = (type &gt;&gt; 6) &amp; 0x03;" />
+		<issue line="85" char="36" reason="Unexpected use of &apos;&gt;&gt;&apos;." evidence="    element.tagConstructed = (type &gt;&gt; 5) &amp; 0x01;" />
+		<issue line="85" char="42" reason="Unexpected use of &apos;&amp;&apos;." evidence="    element.tagConstructed = (type &gt;&gt; 5) &amp; 0x01;" />
+		<issue line="86" char="27" reason="Unexpected use of &apos;&gt;&gt;&apos;." evidence="    var tagNumber = (type &gt;&gt; 0) &amp; 0x1f;" />
+		<issue line="86" char="33" reason="Unexpected use of &apos;&amp;&apos;." evidence="    var tagNumber = (type &gt;&gt; 0) &amp; 0x1f;" />
+		<issue line="88" char="9" reason="Expected &apos;tagNumber&apos; to have an indentation at 7 instead at 9." evidence="        tagNumber = 0;" />
+		<issue line="89" char="9" reason="Expected &apos;var&apos; to have an indentation at 7 instead at 9." evidence="        var tagNumberLast = buffer[offset++];" />
+		<issue line="90" char="9" reason="Expected &apos;while&apos; to have an indentation at 7 instead at 9." evidence="        while(tagNumberLast &amp; 0x80) {" />
+		<issue line="90" char="29" reason="Unexpected use of &apos;&amp;&apos;." evidence="        while(tagNumberLast &amp; 0x80) {" />
+		<issue line="91" char="13" reason="Expected &apos;tagNumber&apos; to have an indentation at 9 instead at 13." evidence="            tagNumber = (tagNumber &lt;&lt; 7) + (tagNumberLast &amp; 0x1f);" />
+		<issue line="91" char="36" reason="Unexpected use of &apos;&lt;&lt;&apos;." evidence="            tagNumber = (tagNumber &lt;&lt; 7) + (tagNumberLast &amp; 0x1f);" />
+		<issue line="91" char="59" reason="Unexpected use of &apos;&amp;&apos;." evidence="            tagNumber = (tagNumber &lt;&lt; 7) + (tagNumberLast &amp; 0x1f);" />
+		<issue line="92" char="13" reason="Expected &apos;tagNumberLast&apos; to have an indentation at 9 instead at 13." evidence="            tagNumberLast = buffer[offset++];" />
+		<issue line="93" char="9" reason="Expected &apos;}&apos; to have an indentation at 7 instead at 9." evidence="        }" />
+		<issue line="94" char="9" reason="Expected &apos;tagNumber&apos; to have an indentation at 7 instead at 9." evidence="        tagNumber = (tagNumber &lt;&lt; 7) + tagNumberLast;" />
+		<issue line="94" char="32" reason="Unexpected use of &apos;&lt;&lt;&apos;." evidence="        tagNumber = (tagNumber &lt;&lt; 7) + tagNumberLast;" />
+		<issue line="97" char="1" reason="Trailing whitespace." evidence="    " />
+		<issue line="98" char="18" reason="Trailing whitespace." evidence="    element.tag = " />
+		<issue line="100" char="66" reason="Trailing whitespace." evidence="        [&apos;-primative-&apos;,&apos;-constructed-&apos;][element.tagConstructed] + " />
+		<issue line="104" char="17" reason="Unexpected use of &apos;&amp;&apos;." evidence="    if ((length &amp; 0x80) == 0x80 ) {" />
+		<issue line="105" char="9" reason="Expected &apos;var&apos; to have an indentation at 7 instead at 9." evidence="        var lengthBytes = length &amp; 0x7f;" />
+		<issue line="105" char="34" reason="Unexpected use of &apos;&amp;&apos;." evidence="        var lengthBytes = length &amp; 0x7f;" />
+		<issue line="106" char="9" reason="Expected &apos;length&apos; to have an indentation at 7 instead at 9." evidence="        length = 0;" />
+		<issue line="107" char="9" reason="Expected &apos;while&apos; to have an indentation at 7 instead at 9." evidence="        while(lengthBytes--) {" />
+		<issue line="108" char="13" reason="Expected &apos;length&apos; to have an indentation at 9 instead at 13." evidence="            length = length * 0x100 + buffer[offset++];   " />
+		<issue line="108" char="56" reason="Trailing whitespace." evidence="            length = length * 0x100 + buffer[offset++];   " />
+		<issue line="109" char="9" reason="Expected &apos;}&apos; to have an indentation at 7 instead at 9." evidence="        }" />
+		<issue line="112" char="1" reason="Trailing whitespace." evidence="    " />
+		<issue line="114" char="9" reason="Expected &apos;throw&apos; to have an indentation at 7 instead at 9." evidence="        throw new Error(&apos;oob&apos;);" />
+		<issue line="114" char="9" reason="Too many errors. (51% scanned)." evidence="" />
+	</file>
+	<file name="lib/util/certificates/pkcs.js">
+		<issue line="31" char="39" reason="Trailing whitespace." evidence="        &apos;1.2.840.113549.1.7.1&apos;:&apos;data&apos;, " />
+		<issue line="46" char="5" reason="Expected &apos;}&apos; to have an indentation at 7 instead at 5." evidence="    }," />
+		<issue line="48" char="5" reason="Expected &apos;pfx2pem&apos; to have an indentation at 7 instead at 5." evidence="    pfx2pem: pfx2pem" />
+		<issue line="49" char="1" reason="Expected &apos;}&apos; to have an indentation at 5 instead at 1." evidence="};" />
+		<issue line="52" char="17" reason="&apos;pfx2pem&apos; was used before it was defined." evidence="function pfx2pem(buffer) {" />
+		<issue line="61" char="5" reason="Expected &apos;}&apos; to have an indentation at 7 instead at 5." evidence="    });" />
+		<issue line="67" char="5" reason="Expected &apos;}&apos; to have an indentation at 7 instead at 5." evidence="    });" />
+		<issue line="74" char="13" reason="Expected &apos;result&apos; to have an indentation at 11 instead at 13." evidence="            result = result + text.substring(index, index + 64) + &apos;\r\n&apos;;" />
+		<issue line="75" char="13" reason="Expected &apos;index&apos; to have an indentation at 11 instead at 13." evidence="            index += 64;" />
+		<issue line="78" char="5" reason="Expected &apos;}&apos; to have an indentation at 7 instead at 5." evidence="    }" />
+		<issue line="81" char="1" reason="Expected &apos;}&apos; to have an indentation at 3 instead at 1." evidence="}" />
+		<issue line="84" char="20" reason="&apos;PfxDecoder&apos; was used before it was defined." evidence="function PfxDecoder() {" />
+		<issue line="87" char="1" reason="Trailing whitespace." evidence="    " />
+		<issue line="89" char="1" reason="Trailing whitespace." evidence="    " />
+		<issue line="92" char="5" reason="Expected &apos;}&apos; to have an indentation at 7 instead at 5." evidence="    });" />
+		<issue line="95" char="5" reason="Expected &apos;}&apos; to have an indentation at 7 instead at 5." evidence="    });" />
+		<issue line="98" char="5" reason="Expected &apos;}&apos; to have an indentation at 7 instead at 5." evidence="    });" />
+		<issue line="99" char="1" reason="Expected &apos;}&apos; to have an indentation at 3 instead at 1." evidence="}" />
+		<issue line="103" char="23" reason="&apos;PfxPduDecoder&apos; was used before it was defined." evidence="function PfxPduDecoder() {" />
+		<issue line="114" char="5" reason="Expected &apos;}&apos; to have an indentation at 7 instead at 5." evidence="    });" />
+		<issue line="117" char="5" reason="Expected &apos;}&apos; to have an indentation at 7 instead at 5." evidence="    });" />
+		<issue line="120" char="5" reason="Expected &apos;}&apos; to have an indentation at 7 instead at 5." evidence="    });    " />
+		<issue line="120" char="8" reason="Trailing whitespace." evidence="    });    " />
+		<issue line="123" char="5" reason="Expected &apos;}&apos; to have an indentation at 7 instead at 5." evidence="    });" />
+		<issue line="126" char="5" reason="Expected &apos;}&apos; to have an indentation at 7 instead at 5." evidence="    });" />
+		<issue line="127" char="1" reason="Expected &apos;}&apos; to have an indentation at 3 instead at 1." evidence="}" />
+		<issue line="131" char="30" reason="&apos;PfxContentBagDecoder&apos; was used before it was defined." evidence="function PfxContentBagDecoder() {" />
+		<issue line="134" char="1" reason="Trailing whitespace." evidence="    " />
+		<issue line="138" char="5" reason="Expected &apos;}&apos; to have an indentation at 7 instead at 5." evidence="    });" />
+		<issue line="142" char="5" reason="Expected &apos;}&apos; to have an indentation at 7 instead at 5." evidence="    });" />
+		<issue line="143" char="1" reason="Expected &apos;}&apos; to have an indentation at 3 instead at 1." evidence="}" />
+		<issue line="147" char="31" reason="&apos;PfxContentInfoDecoder&apos; was used before it was defined." evidence="function PfxContentInfoDecoder() {" />
+		<issue line="153" char="1" reason="Trailing whitespace." evidence="    " />
+		<issue line="156" char="5" reason="Expected &apos;}&apos; to have an indentation at 7 instead at 5." evidence="    });" />
+		<issue line="157" char="1" reason="Trailing whitespace." evidence="    " />
+		<issue line="162" char="13" reason="Expected &apos;assert&apos; to have an indentation at 11 instead at 13." evidence="            assert.equal(elements.length, 2);" />
+		<issue line="163" char="13" reason="Expected &apos;assert&apos; to have an indentation at 11 instead at 13." evidence="            assert.equal(elements[1].tag, der.CONTEXT_CONSTRUCTED_0);" />
+		<issue line="164" char="13" reason="Expected &apos;elements&apos; to have an indentation at 11 instead at 13." evidence="            elements = generic.parse(elements[1].buffer);" />
+		<issue line="166" char="13" reason="Expected &apos;assert&apos; to have an indentation at 11 instead at 13." evidence="            assert.equal(elements.length, 1);" />
+		<issue line="167" char="13" reason="Expected &apos;assert&apos; to have an indentation at 11 instead at 13." evidence="            assert.equal(elements[0].tag, der.OCTET_STRING);" />
+		<issue line="168" char="13" reason="Expected &apos;elements&apos; to have an indentation at 11 instead at 13." evidence="            elements = generic.parse(elements[0].buffer);" />
+		<issue line="169" char="1" reason="Trailing whitespace." evidence="            " />
+		<issue line="170" char="13" reason="Expected &apos;for&apos; to have an indentation at 11 instead at 13." evidence="            for(var index = 0; index != elements.length; ++index) {" />
+		<issue line="171" char="17" reason="Expected &apos;assert&apos; to have an indentation at 13 instead at 17." evidence="                assert.equal(elements[index].tag, der.SEQUENCE);" />
+		<issue line="172" char="17" reason="Expected &apos;self&apos; to have an indentation at 13 instead at 17." evidence="                self.emit(&apos;data&apos;, elements[index].buffer);" />
+		<issue line="173" char="13" reason="Expected &apos;}&apos; to have an indentation at 11 instead at 13." evidence="            }" />
+		<issue line="175" char="13" reason="Expected &apos;assert&apos; to have an indentation at 11 instead at 13." evidence="            assert.equal(elements[1].tag, der.CONTEXT_CONSTRUCTED_0);" />
+		<issue line="176" char="13" reason="Expected &apos;elements&apos; to have an indentation at 11 instead at 13." evidence="            elements = generic.parse(elements[1].buffer);" />
+		<issue line="178" char="13" reason="Expected &apos;assert&apos; to have an indentation at 11 instead at 13." evidence="            assert.equal(elements.length, 1);" />
+		<issue line="179" char="13" reason="Expected &apos;assert&apos; to have an indentation at 11 instead at 13." evidence="            assert.equal(elements[0].tag, der.SEQUENCE);" />
+		<issue line="179" char="13" reason="Too many errors. (38% scanned)." evidence="" />
+	</file>
+	<file name="lib/util/js2xml.js">
+		<issue line="50" char="1" reason="Trailing whitespace." evidence="  " />
+		<issue line="64" char="29" reason="&apos;_writeElementValue&apos; was used before it was defined." evidence="function _writeElementValue (parentElement, name, value) {" />
+		<issue line="121" char="18" reason="&apos;_isDate&apos; was used before it was defined." evidence="function _isDate (value) {" />
+		<issue line="122" char="67" reason="Strings must use singlequote." evidence="  return Object.prototype.toString.call(value) === &quot;[object Date]&quot;;" />
+		<issue line="130" char="24" reason="&apos;formatToString&apos; was used before it was defined." evidence="function formatToString(value) {" />
+	</file>
+	<file name="lib/util/patch-winston.js">
+		<issue line="38" char="1" reason="Trailing whitespace." evidence="  " />
+		<issue line="41" char="1" reason="Trailing whitespace." evidence="  " />
+		<issue line="60" char="1" reason="Trailing whitespace." evidence="  " />
+		<issue line="76" char="62" reason="Trailing whitespace." evidence="      timestamp   = options.timestamp ? timestampFn() : null, " />
+		<issue line="88" char="1" reason="Trailing whitespace." evidence="    " />
+		<issue line="92" char="1" reason="Trailing whitespace." evidence="    " />
+		<issue line="113" char="4" reason="Trailing whitespace." evidence="  } " />
+	</file>
+	<file name="lib/utils.js">
+		<issue line="48" char="0" reason="Identifier &apos;callback_&apos; is not in camel case." evidence="  function callback_(error, response) {" />
+		<issue line="68" char="0" reason="Identifier &apos;callback_&apos; is not in camel case." evidence="  args.push(callback_);" />
+		<issue line="76" char="21" reason="&apos;pollRequest&apos; was used before it was defined." evidence="function pollRequest(channel, reqid, callback) {" />
+		<issue line="96" char="26" reason="&apos;RequestLogFilter&apos; was used before it was defined." evidence="function RequestLogFilter(logger) {" />
+		<issue line="130" char="1" reason="Trailing whitespace." evidence="  " />
+		<issue line="137" char="1" reason="Trailing whitespace." evidence="  " />
+		<issue line="151" char="1" reason="Trailing whitespace." evidence="  " />
+		<issue line="152" char="0" reason="Identifier &apos;callback_&apos; is not in camel case." evidence="  function callback_(error, blobStorageUrl) {" />
+		<issue line="161" char="0" reason="Identifier &apos;callback_&apos; is not in camel case." evidence="      callback_(error);" />
+		<issue line="166" char="1" reason="Trailing whitespace." evidence="      " />
+		<issue line="170" char="0" reason="Identifier &apos;checkNextStorageAccount_&apos; is not in camel case." evidence="        var checkNextStorageAccount_ = function () {" />
+		<issue line="172" char="118" reason="Trailing whitespace." evidence="          doServiceManagementOperation(svcMgmtChannel, &apos;getStorageAccountProperties&apos;, storageAccounts[i].ServiceName, " />
+		<issue line="175" char="0" reason="Identifier &apos;callback_&apos; is not in camel case." evidence="                callback_(error);" />
+		<issue line="177" char="19" reason="Expected &apos;if&apos; to have an indentation at 17 instead at 19." evidence="                  if ((location &amp;&amp; response.body.StorageServiceProperties.Location &amp;&amp; response.body.StorageServiceProperties.Location.toLowerCase() === location.toLowerCase()) ||" />
+		<issue line="184" char="0" reason="Identifier &apos;callback_&apos; is not in camel case." evidence="                  callback_(null, blobStorageUrl);" />
+		<issue line="189" char="0" reason="Identifier &apos;checkNextStorageAccount_&apos; is not in camel case." evidence="                    checkNextStorageAccount_();" />
+		<issue line="192" char="0" reason="Identifier &apos;createNewStorageAccount_&apos; is not in camel case." evidence="                    createNewStorageAccount_();" />
+		<issue line="200" char="0" reason="Identifier &apos;checkNextStorageAccount_&apos; is not in camel case." evidence="        checkNextStorageAccount_();" />
+		<issue line="202" char="0" reason="Identifier &apos;createNewStorageAccount_&apos; is not in camel case." evidence="        var createNewStorageAccount_ = function () {" />
+		<issue line="209" char="1" reason="Trailing whitespace." evidence="          " />
+		<issue line="213" char="0" reason="Identifier &apos;callback_&apos; is not in camel case." evidence="              callback_(error);" />
+		<issue line="217" char="1" reason="Trailing whitespace." evidence="              " />
+		<issue line="218" char="110" reason="Trailing whitespace." evidence="              doServiceManagementOperation(svcMgmtChannel, &apos;getStorageAccountProperties&apos;, storageAccountName, " />
+		<issue line="221" char="0" reason="Identifier &apos;callback_&apos; is not in camel case." evidence="                    callback_(error);" />
+		<issue line="228" char="0" reason="Identifier &apos;callback_&apos; is not in camel case." evidence="                    callback_(null, blobStorageUrl);" />
+		<issue line="236" char="0" reason="Identifier &apos;createNewStorageAccount_&apos; is not in camel case." evidence="        createNewStorageAccount_();" />
+		<issue line="303" char="1" reason="Trailing whitespace." evidence="      " />
+		<issue line="362" char="19" reason="Trailing whitespace." evidence="  return intValue; " />
+		<issue line="378" char="5" reason="The body of a for in should be wrapped in an if statement to filter unwanted properties from the prototype." evidence="    for (var i in object) {" />
+		<issue line="389" char="12" reason="Trailing whitespace." evidence="    return;  " />
+		<issue line="374" char="18" reason="&apos;logLineFormat&apos; is defined but never used." evidence="var logLineFormat = exports.logLineFormat = function logLineFormat(object, logFunc, prefix) {" />
+		<issue line="211" char="39" reason="&apos;response&apos; is defined but never used." evidence="              function(error, response) {" />
+	</file>
+</jslint>
