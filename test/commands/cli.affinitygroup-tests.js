@@ -13,6 +13,9 @@
 * limitations under the License.
 */
 
+var executeCommand = require('../framework/cli-executor').execute;
+var MockedTestUtils = require('../framework/mocked-test-utils');
+
 var _ = require('underscore');
 
 var should = require('should');
@@ -20,8 +23,6 @@ var mocha = require('mocha');
 
 var util = require('util');
 var uuid = require('node-uuid');
-var executeCommand = require('../framework/cli-executor').execute;
-var MockedTestUtils = require('../framework/mocked-test-utils');
 
 var AFFINITYGROUP_NAME_PREFIX = 'xplatcli-';
 var AFFINITYGROUP_LOCATION = 'West US';
