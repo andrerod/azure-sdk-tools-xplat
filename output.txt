@@ -4,12 +4,6 @@
 
 <?xml version="1.0" encoding="utf-8"?>
 <jslint>
-	<file name="lib/cli.js">
-		<issue line="693" char="5" reason="The body of a for in should be wrapped in an if statement to filter unwanted properties from the prototype." evidence="    for (var index in cat.commands) {" />
-		<issue line="698" char="5" reason="The body of a for in should be wrapped in an if statement to filter unwanted properties from the prototype." evidence="    for (var subCat in cat.categories) {" />
-		<issue line="689" char="3" reason="The body of a for in should be wrapped in an if statement to filter unwanted properties from the prototype." evidence="  for (var name in parent.categories) {" />
-		<issue line="708" char="5" reason="The body of a for in should be wrapped in an if statement to filter unwanted properties from the prototype." evidence="    for (var name in parent.categories) {" />
-	</file>
 	<file name="lib/commands/account.js">
 		<issue line="169" char="11" reason="The body of a for in should be wrapped in an if statement to filter unwanted properties from the prototype." evidence="          for (var index in subs) {" />
 		<issue line="319" char="33" reason="Missing &apos;new&apos; prefix when invoking a constructor." evidence="              row.cell(&apos;Label&apos;, Buffer(item.Label, &apos;base64&apos;).toString());" />
