@@ -96,6 +96,7 @@ var defaultGithubUsername = 'azuresdkci';
 var defaultGithubPassword = 'fakepassword';
 var defaultGithubRepository = 'azuresdkci/azuresdkci-repo';
 var defaultGitUsername = 'andrerod';
+var defaultStorageAccount = 'ciserversdk';
 
 if (!process.env.NOCK_OFF) {
   if (!process.env.AZURE_NOCK_RECORD) {
@@ -123,6 +124,10 @@ if (!process.env.NOCK_OFF) {
 
     if (process.env.AZURE_GIT_USERNAME !== defaultGitUsername) {
       process.env.AZURE_GIT_USERNAME = defaultGitUsername;
+    }
+
+    if (process.env.AZURE_STORAGE_ACCOUNT !== defaultStorageAccount) {
+      process.env.AZURE_STORAGE_ACCOUNT = defaultStorageAccount;
     }
   } else if (process.env.AZURE_NOCK_RECORD) {
     // If in record mode, and environment variables are set, make sure they are the expected one for recording
