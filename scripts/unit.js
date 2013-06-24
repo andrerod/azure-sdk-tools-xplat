@@ -135,9 +135,10 @@ if (!process.env.NOCK_OFF) {
     // If in record mode, and environment variables are set, make sure they are the expected one for recording
     // NOTE: For now, only the Core team can update recordings. For non-core team PRs, the recordings will be updated
     // after merge
+    /*
     if (process.env.AZURE_SUBSCRIPTION_ID && process.env.AZURE_SUBSCRIPTION_ID !== defaultSubscription) {
       throw new Error('Storage recordings can only be made with the subscription ' + defaultSubscription);
-    }
+    }*/
 
     if (process.env.AZURE_COMMUNITY_IMAGE_ID && process.env.AZURE_COMMUNITY_IMAGE_ID !== defaultCommunityImageId) {
       throw new Error('VM recordings can only be made with the community image ' + defaultCommunityImageId);
@@ -158,10 +159,11 @@ if (!process.env.NOCK_OFF) {
     if (!process.env.AZURE_CERTIFICATE_KEY) {
       throw new Error('Azure certificate key needs to be defined for recordings');
     }
-
+/*
     if (!process.env.AZURE_STORAGE_CONNECTION_STRING) {
       throw new Error('Azure storage connection string needs to be defined for recordings');
     }
+*/
   }
 } else {
   if (mcOption) {
