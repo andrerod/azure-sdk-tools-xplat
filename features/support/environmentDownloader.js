@@ -39,9 +39,21 @@ function ensureEnvironment() {
 }
 
 function EnvironmentDownloader(tempPath) {
-  if (!fs.existsSync(tempPath) || !fs.statSync(tempPath).isDirectory()) {
-    throw new Error(tempPath + ' does not exist or is not a directory');
+  function getTempPath(current) {
+    if (!fs.existsSync(current) || !fs.statSync(current).isDirectory()) {
+      // try in upper directories
+      if (!path.dirname(current)) {
+        throw new Error(tempPath + ' does not exist or is not a directory');
+      }
+
+      return getTempPath(path.join(path.dirname(path.dirname(current))), path.basename(current));
+    }
+
+    return current;
   }
+
+  tempPath = getTempPath(path.join(process.cwd(), tempPath));
+
   ensureEnvironment();
   this.path = path.resolve(tempPath);
   this.blobService = azure.createBlobService(process.env.AZURE_STORAGE_ACCOUNT, process.env.AZURE_STORAGE_ACCESS_KEY);
@@ -103,7 +115,7 @@ function getPublishSettingsFromCache(settingsName, callback) {
 }
 
 function getPublishSettings(settingsName, callback) {
-  settingsName = settingsName.replace(/[ -.]/, '');
+  settingsName = settingsName.replace(/[ -.]/g, '');
   if (fs.existsSync(this._fullSettingsFilePath(settingsName))) {
     this._getPublishSettingsFromCache(settingsName, callback);
   } else {
