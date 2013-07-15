@@ -49,7 +49,7 @@
     "eyes": "0.x.x",
     "easy-table": "0.0.1",
     "github": "0.1.6",
-    "kuduscript": "git://github.com/projectkudu/KuduScript.git#593601edb55c0c9d2925650077ba9214e3df927c"
+    "kuduscript": "0.1.2"
   },
   "devDependencies": {
     "mocha": "*",
@@ -74,8 +74,7 @@
     "unit-mc": "node scripts/unit.js --mc testlistmc.txt",
     "jshint": "jshint lib --jslint-reporter --extra-ext '._js'",
     "preci": "jshint lib --reporter=checkstyle --extra-ext '._js' > checkstyle-result.xml",
-    "ci": "node scripts/unit.js testlist.txt -xunit > noisy-test-result.xml",
-    "postci": "node scripts/filter-testresults.js -rm noisy-test-result.xml > test-result.xml",
+    "ci": "node scripts/unit.js testlist.txt -xunit",
     "preacceptance": "node scripts/cuke-environment.js setup",
     "acceptance": "node node_modules/cucumber/bin/cucumber.js",
     "postacceptance": "node scripts/cuke-environment.js teardown"
