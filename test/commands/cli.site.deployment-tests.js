@@ -439,7 +439,7 @@ function getFileContent(path, testOutputDir) {
   testOutputDir = testOutputDir || testDir;
 
   path = pathUtil.join(testOutputDir, path);
-  fs.existsSync(path).should.equal(true, "File doesn't exist: " + path);
+  fs.existsSync(path).should.equal(true, 'File doesn\'t exist: ' + path);
   return fs.readFileSync(path, 'utf8');
 }
 
