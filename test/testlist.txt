@@ -7,7 +7,7 @@ commands/mobile-tests.js
 commands/mobilerecover-tests.js
 commands/sb-tests.js
 commands/site-tests.js
-# commands/site.appsetting-tests.js
+commands/site.appsetting-tests.js
 # commands/site.connectionstring-tests.js
 commands/site.deployment-tests.js
 # commands/site.deploymentscript-tests.js
