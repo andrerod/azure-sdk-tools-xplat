@@ -14,8 +14,9 @@
 */
 
 var should = require('should');
+var util = require('util');
 
-var MockedTestUtils = require('../framework/mocked-test-utils');
+var CLITest = require('../framework/cli-test');
 
 var suit;
 var testPrefix = 'cli.site.handler-tests';
@@ -30,7 +31,7 @@ describe('cli', function(){
   describe('site handler', function() {
 
     before(function (done) {
-      suit = new MockedTestUtils(testPrefix);
+      suit = new CLITest(testPrefix);
       suit.setupSuite(done);
     });
 
