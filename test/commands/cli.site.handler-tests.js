@@ -27,7 +27,7 @@ var siteNames = [];
 var location = process.env.AZURE_SITE_TEST_LOCATION || 'East US';
 
 describe('cli', function(){
-  describe('handler', function() {
+  describe('site handler', function() {
 
     before(function (done) {
       suit = new MockedTestUtils(testPrefix);
