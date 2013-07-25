@@ -63,32 +63,32 @@ describe('cli', function(){
       var siteName = suite.generateId(siteNamePrefix, siteNames);
 
       // Create site
-      executeCmd('site create %s --json --location %s', siteName, location, function (result) {
+      suite.execute('site create %s --json --location %s', siteName, location, function (result) {
         result.text.should.equal('');
         result.exitStatus.should.equal(0);
 
         // List sites
-        executeCmd('site connectionstring list %s --json', siteName, function (result) {
+        suite.execute('site connectionstring list %s --json', siteName, function (result) {
           // there should be not settings yet as the site was just created
           result.exitStatus.should.equal(0);
 
           // add a setting
-          executeCmd('site connectionstring add param1 %s SQLAzure %s --json', connectionString, siteName, function (result) {
+          suite.execute('site connectionstring add param1 %s SQLAzure %s --json', connectionString, siteName, function (result) {
             result.text.should.equal('');
             result.exitStatus.should.equal(0);
 
-            executeCmd('site connectionstring list %s --json', siteName, function (result) {
+            suite.execute('site connectionstring list %s --json', siteName, function (result) {
               var settingsList = JSON.parse(result.text);
 
               // Listing should return 1 setting now
               settingsList.length.should.equal(1);
 
               // add another setting
-              executeCmd('site connectionstring add param2 %s SQLAzure %s --json', connectionString, siteName, function (result) {
+              suite.execute('site connectionstring add param2 %s SQLAzure %s --json', connectionString, siteName, function (result) {
                 result.text.should.equal('');
                 result.exitStatus.should.equal(0);
 
-                executeCmd('site connectionstring list %s --json', siteName, function (result) {
+                suite.execute('site connectionstring list %s --json', siteName, function (result) {
                   var settingsList = JSON.parse(result.text);
 
                   // Listing should return 2 setting now
@@ -107,37 +107,30 @@ describe('cli', function(){
       var siteName = suite.generateId(siteNamePrefix, siteNames);
 
       // Create site
-      var cmd = ('node cli.js site create ' + siteName + ' --json --location').split(' ');
-      cmd.push(location);
-      executeCmd(cmd, function (result) {
+      suite.execute('site create %s --json --location %s', siteName, location, function (result) {
         result.text.should.equal('');
         result.exitStatus.should.equal(0);
 
         // List sites
-        cmd = ('node cli.js site connectionstring list ' + siteName + ' --json ').split(' ');
-        executeCmd(cmd, function (result) {
+        suite.execute('site connectionstring list %s --json', siteName, function (result) {
           // there should be not settings yet as the site was just created
           result.exitStatus.should.equal(0);
 
           // add a setting
-          var cmd = ('node cli.js site connectionstring add param3 myvalue SQLAzure ' + siteName + ' --json').split(' ');
-          executeCmd(cmd, function (result) {
+          suite.execute('site connectionstring add param3 myvalue SQLAzure %s --json', siteName, function (result) {
             result.text.should.equal('');
             result.exitStatus.should.equal(0);
 
-            cmd = ('node cli.js site connectionstring show param3 ' + siteName + ' --json').split(' ');
-            executeCmd(cmd, function (result) {
+            suite.execute('site connectionstring show param3 %s --json', siteName, function (result) {
               result.text.should.equal('"myvalue"\n');
               result.exitStatus.should.equal(0);
 
               // add another setting
-              var cmd = ('node cli.js site connectionstring delete param3 ' + siteName + ' --quiet --json').split(' ');
-              executeCmd(cmd, function (result) {
+              suite.execute('site connectionstring delete param3 %s --quiet --json', siteName, function (result) {
                 result.text.should.equal('');
                 result.exitStatus.should.equal(0);
 
-                cmd = ('node cli.js site connectionstring list ' + siteName + ' --json').split(' ');
-                executeCmd(cmd, function (result) {
+                suite.execute('site connectionstring list %s --json', siteName, function (result) {
                   result.exitStatus.should.equal(0);
 
                   done();
