@@ -14,7 +14,6 @@
 */
 
 var should = require('should');
-var util = require('util');
 
 var CLITest = require('../framework/cli-test');
 
@@ -49,7 +48,7 @@ describe('site appsetting', function() {
       }
 
       var siteName = createdSites.pop();
-      suite.execute(util.format('site delete %s --json --quiet', siteName), function () {
+      suite.execute('site delete %s --json --quiet', siteName, function () {
         removeSite();
       });
     }
@@ -61,32 +60,32 @@ describe('site appsetting', function() {
     var siteName = suite.generateId(siteNamePrefix, siteNames);
 
     // Create site
-    suite.execute(util.format('site create %s --json --location "%s"', siteName, location), function (result) {
+    suite.execute('site create %s --json --location %s', siteName, location, function (result) {
       result.text.should.equal('');
       result.exitStatus.should.equal(0);
 
       // List sites
-      suite.execute(util.format('site appsetting list %s --json ', siteName), function (result) {
+      suite.execute('site appsetting list %s --json ', siteName, function (result) {
         // there should be not settings yet as the site was just created
         result.exitStatus.should.equal(0);
 
         // add a setting
-        suite.execute(util.format('site appsetting add mysetting=myvalue %s --json', siteName), function (result) {
+        suite.execute('site appsetting add mysetting=myvalue %s --json', siteName, function (result) {
           result.text.should.equal('');
           result.exitStatus.should.equal(0);
 
-          suite.execute(util.format('site appsetting list %s --json', siteName), function (result) {
+          suite.execute('site appsetting list %s --json', siteName, function (result) {
             var settingsList = JSON.parse(result.text);
 
             // Listing should return 1 setting now
             settingsList.length.should.equal(1);
 
             // add another setting
-            suite.execute(util.format('site appsetting add mysetting2=myvalue %s --json', siteName), function (result) {
+            suite.execute('site appsetting add mysetting2=myvalue %s --json', siteName, function (result) {
               result.text.should.equal('');
               result.exitStatus.should.equal(0);
 
-              suite.execute(util.format('site appsetting list %s --json', siteName), function (result) {
+              suite.execute('site appsetting list %s --json', siteName, function (result) {
                 var settingsList = JSON.parse(result.text);
 
                 // Listing should return 2 setting now
@@ -105,30 +104,30 @@ describe('site appsetting', function() {
     var siteName = suite.generateId(siteNamePrefix, siteNames);
 
     // Create site
-    suite.execute(util.format('site create %s --json --location "%s"', siteName, location), function (result) {
+    suite.execute('site create %s --json --location %s', siteName, location, function (result) {
       result.text.should.equal('');
       result.exitStatus.should.equal(0);
 
       // List sites
-      suite.execute(util.format('site appsetting list %s --json ', siteName), function (result) {
+      suite.execute('site appsetting list %s --json ', siteName, function (result) {
         // there should be not settings yet as the site was just created
         result.exitStatus.should.equal(0);
 
         // add a setting
-        suite.execute(util.format('site appsetting add mysetting=myvalue %s --json', siteName), function (result) {
+        suite.execute('site appsetting add mysetting=myvalue %s --json', siteName, function (result) {
           result.text.should.equal('');
           result.exitStatus.should.equal(0);
 
-          suite.execute(util.format('site appsetting show mysetting %s --json', siteName), function (result) {
+          suite.execute('site appsetting show mysetting %s --json', siteName, function (result) {
             result.text.should.equal('"myvalue"\n');
             result.exitStatus.should.equal(0);
 
             // add another setting
-            suite.execute(util.format('site appsetting delete mysetting %s --quiet --json', siteName), function (result) {
+            suite.execute('site appsetting delete mysetting %s --quiet --json', siteName, function (result) {
               result.text.should.equal('');
               result.exitStatus.should.equal(0);
 
-              suite.execute(util.format('site appsetting list %s --json', siteName), function (result) {
+              suite.execute('site appsetting list %s --json', siteName, function (result) {
                 result.exitStatus.should.equal(0);
 
                 done();

@@ -14,8 +14,6 @@
 */
 
 var _ = require('underscore');
-
-var util = require('util');
 var should = require('should');
 
 var CLITest = require('../framework/cli-test');
@@ -64,7 +62,7 @@ describe('service', function () {
         if (serviceNames.length > 0) {
           var serviceName = serviceNames.pop();
 
-          suite.execute(util.format('service delete %s --quiet --json', serviceName), function () {
+          suite.execute('service delete %s --quiet --json', serviceName, function () {
             deleteUsedServices(serviceNames);
           });
         } else {
@@ -90,7 +88,7 @@ describe('service', function () {
       it('should create a server', function (done) {
         var cloudServiceName = suite.generateId(createdServicesPrefix, createdServices);
 
-        suite.execute(util.format('node cli.js service create %s --location "%s" --json', cloudServiceName, location), function (result) {
+        suite.execute('node cli.js service create %s --location %s --json', cloudServiceName, location, function (result) {
           result.text.should.not.be.null;
           result.exitStatus.should.equal(0);
 
@@ -108,7 +106,7 @@ describe('service', function () {
 
       beforeEach(function (done) {
         cloudServiceName = suite.generateId(createdServicesPrefix, createdServices);
-        suite.execute(util.format('service create %s --location "%s" --json', cloudServiceName, location), function (result) {
+        suite.execute('service create %s --location %s --json', cloudServiceName, location, function (result) {
           result.text.should.not.be.null;
           result.exitStatus.should.equal(0);
 
@@ -120,7 +118,7 @@ describe('service', function () {
       });
 
       it('should show the service', function (done) {
-        suite.execute(util.format('service show %s --json', cloudServiceName), function (result) {
+        suite.execute('service show %s --json', cloudServiceName, function (result) {
           result.text.should.not.be.null;
           result.exitStatus.should.equal(0);
 

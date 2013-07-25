@@ -16,7 +16,6 @@
 var should = require('should');
 var url = require('url');
 var GitHubApi = require('github');
-var util = require('util');
 
 var CLITest = require('../framework/cli-test');
 
@@ -89,7 +88,7 @@ describe('site', function() {
     var siteName = suite.generateId(siteNamePrefix, siteNames);
 
     // Create site
-    suite.execute(util.format('site create %s --json --location "%s"', siteName, location), function (result) {
+    suite.execute('site create %s --json --location %s', siteName, location, function (result) {
       result.text.should.equal('');
       result.errorText.should.equal('');
       result.exitStatus.should.equal(0);
@@ -105,7 +104,7 @@ describe('site', function() {
         siteExists.should.be.ok;
 
         // Delete created site
-        suite.execute(util.format('site delete %s --json --quiet', siteName), function (result) {
+        suite.execute('site delete %s --json --quiet', siteName, function (result) {
           result.text.should.equal('');
           result.exitStatus.should.equal(0);
 
@@ -132,12 +131,12 @@ describe('site', function() {
     var siteName = suite.generateId(siteNamePrefix, siteNames);
 
     // Create site
-    suite.execute(util.format('site create %s --github --json --location "%s" --githubusername %s --githubpassword %s --githubrepository %s',
+    suite.execute('site create %s --github --json --location "%s" --githubusername %s --githubpassword %s --githubrepository %s',
       siteName,
       'East US',
       githubUsername,
       githubPassword,
-      githubRepositoryFullName),
+      githubRepositoryFullName,
       function (result) {
 
       result.text.should.equal('');
@@ -169,7 +168,7 @@ describe('site', function() {
             hookExists.should.be.ok;
 
             // Delete created site
-            suite.execute(util.format('site delete %s --json --quiet', siteName), function (result) {
+            suite.execute('site delete %s --json --quiet', siteName, function (result) {
               result.text.should.equal('');
               result.exitStatus.should.equal(0);
 
@@ -198,17 +197,17 @@ describe('site', function() {
     var siteName = suite.generateId(siteNamePrefix, siteNames);
 
     // Create site
-    suite.execute(util.format('site create %s --json --location "%s"', siteName, location), function (result) {
+    suite.execute('site create %s --json --location %s', siteName, location, function (result) {
       result.text.should.equal('');
       result.exitStatus.should.equal(0);
 
       // Rerun to make sure update hook works properly
-      suite.execute(util.format('site create %s --github --json --location "%s" --githubusername %s --githubpassword %s --githubrepository %s',
+      suite.execute('site create %s --github --json --location "%s" --githubusername %s --githubpassword %s --githubrepository %s',
         siteName,
         location,
         githubUsername,
         githubPassword,
-        githubRepositoryFullName),
+        githubRepositoryFullName,
         function (result) {
 
         result.text.should.equal('');
@@ -240,7 +239,7 @@ describe('site', function() {
               hookExists.should.be.ok;
 
               // Delete created site
-              suite.execute(util.format('site delete %s --json --quiet', siteName), function (result) {
+              suite.execute('site delete %s --json --quiet', siteName, function (result) {
                 result.text.should.equal('');
                 result.exitStatus.should.equal(0);
 
@@ -270,15 +269,15 @@ describe('site', function() {
     var siteName = suite.generateId(siteNamePrefix, siteNames);
 
     // Create site for testing
-    suite.execute(util.format('node cli.js site create %s --json --location "%s"', siteName, location), function (result) {
+    suite.execute('site create %s --json --location %s', siteName, location, function (result) {
       result.exitStatus.should.equal(0);
 
       // Restart site, it's created running
-      suite.execute(util.format('node cli.js site restart %s', siteName), function (result) {
+      suite.execute('site restart %s', siteName, function (result) {
         result.exitStatus.should.equal(0);
 
         // Delete test site
-        suite.execute(util.format('node cli.js site delete %s --quiet', siteName), function (result) {
+        suite.execute('site delete %s --quiet', siteName, function (result) {
           result.exitStatus.should.equal(0);
 
           done();
@@ -291,19 +290,19 @@ describe('site', function() {
     var siteName = suite.generateId(siteNamePrefix, siteNames);
 
     // Create site for testing
-    suite.execute(util.format('site create %s --json --location "%s"', siteName, location), function (result) {
+    suite.execute('site create %s --json --location "%s"', siteName, location, function (result) {
       result.exitStatus.should.equal(0);
 
       // Stop the site
-      suite.execute(util.format('site stop %s', siteName), function (result) {
+      suite.execute('site stop %s', siteName, function (result) {
         result.exitStatus.should.equal(0);
 
         // Restart site
-        suite.execute(util.format('site restart %s', siteName), function (result) {
+        suite.execute('site restart %s', siteName, function (result) {
           result.exitStatus.should.equal(0);
 
           // Delete test site
-          suite.execute(util.format('site delete %s --quiet', siteName), function (result) {
+          suite.execute('site delete %s --quiet', siteName, function (result) {
             result.exitStatus.should.equal(0);
 
             done();
@@ -319,28 +318,28 @@ describe('site', function() {
     beforeEach(function (done) {
       siteName = suite.generateId(siteNamePrefix, siteNames);
 
-      suite.execute(util.format('site create %s --json --location "%s"', siteName, location), function () {
+      suite.execute('site create %s --json --location %s', siteName, location, function () {
         done();
       });
     });
 
     it('sets all properties', function (done) {
-      suite.execute(util.format('site set --net-version 3.5 --php-version 5.3 %s --json', siteName), function (result) {
+      suite.execute('site set --net-version 3.5 --php-version 5.3 %s --json', siteName, function (result) {
         result.text.should.equal('');
         result.exitStatus.should.equal(0);
 
-        suite.execute(util.format('site show %s --json', siteName), function (result) {
+        suite.execute('site show %s --json', siteName, function (result) {
           result.exitStatus.should.equal(0);
 
           var site = JSON.parse(result.text);
           site.config.NetFrameworkVersion.should.equal('v2.0');
           site.config.PhpVersion.should.equal('5.3');
 
-          suite.execute(util.format('site set --net-version 3.5 --php-version off %s --json', siteName), function (result) {
+          suite.execute('site set --net-version 3.5 --php-version off %s --json', siteName, function (result) {
             result.text.should.equal('');
             result.exitStatus.should.equal(0);
 
-            suite.execute(util.format('node cli.js site show %s --json', siteName), function (result) {
+            suite.execute('node cli.js site show %s --json', siteName, function (result) {
               result.exitStatus.should.equal(0);
 
               var site = JSON.parse(result.text);

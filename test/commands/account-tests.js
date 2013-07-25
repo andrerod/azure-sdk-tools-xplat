@@ -15,7 +15,6 @@
 
 var should = require('should');
 var sinon = require('sinon');
-var util = require('util');
 var fs = require('fs');
 
 var keyFiles = require('../../lib/util/keyFiles');
@@ -144,7 +143,7 @@ describe('account', function() {
     });
 
     it('should import certificate', function(done) {
-      suite.execute(util.format('account import %s --skipregister', testFile), function (result) {
+      suite.execute('account import %s --skipregister', testFile, function (result) {
         result.exitStatus.should.equal(0);
         done();
       });

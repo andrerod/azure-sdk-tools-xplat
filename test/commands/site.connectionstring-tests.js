@@ -61,8 +61,7 @@ describe('cli', function(){
         }
 
         var siteName = createdSites.pop();
-        var cmd = ('node cli.js site delete ' + siteName + ' --json --quiet').split(' ');
-        executeCmd(cmd, function () {
+        executeCmd('site delete %s --json --quiet', siteName, function () {
           removeSite();
         });
       }

@@ -12,9 +12,6 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
-
-var util = require('util');
-
 var should = require('should');
 
 var CLITest = require('../framework/cli-test');
@@ -51,9 +48,9 @@ describe('account affinity-group', function () {
 
   describe('account affinity-group create', function () {
     it('should succeed', function (done) {
-      suite.execute(util.format('account affinity-group create %s --location %s --description AG-DESC --json',
+      suite.execute('account affinity-group create %s --location %s --description AG-DESC --json',
         affinityGroupName,
-        AFFINITYGROUP_LOCATION),
+        AFFINITYGROUP_LOCATION,
         function (result) {
 
         result.exitStatus.should.equal(0);
@@ -76,7 +73,7 @@ describe('account affinity-group', function () {
     });
 
     it('should succeed', function (done) {
-      suite.execute(util.format('account affinity-group show %s --json', affinityGroupName), function (result) {
+      suite.execute('account affinity-group show %s --json', affinityGroupName, function (result) {
         result.exitStatus.should.equal(0);
 
         var affinityGroup = JSON.parse(result.text);
@@ -126,7 +123,7 @@ describe('account affinity-group', function () {
     });
 
     it('should succeed', function (done) {
-      suite.execute(util.format('account affinity-group delete %s --quiet --json', affinityGroupName), function (result) {
+      suite.execute('account affinity-group delete %s --quiet --json', affinityGroupName, function (result) {
         result.exitStatus.should.equal(0);
         result.text.should.be.empty;
 

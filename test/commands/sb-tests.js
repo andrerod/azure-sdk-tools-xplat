@@ -14,7 +14,6 @@
 */
 
 var should = require('should');
-var util = require('util');
 
 var CLITest = require('../framework/cli-test');
 
@@ -94,13 +93,13 @@ describe('sb', function() {
       beforeEach(function (done) {
         namespaceName = suite.generateId(namespacePrefix, namespaces);
 
-        suite.execute(util.format('sb namespace create %s --json --region "%s"', namespaceName, 'West US'), function () {
+        suite.execute('sb namespace create %s --json --region %s', namespaceName, 'West US', function () {
           done();
         });
       });
 
       it('should detect non available namespace name', function (done) {
-        suite.execute(util.format('sb namespace check %s --json', namespaceName), function (result) {
+        suite.execute('sb namespace check %s --json', namespaceName, function (result) {
           result.text.should.not.be.null;
           result.exitStatus.should.equal(0);
 
@@ -112,7 +111,7 @@ describe('sb', function() {
 
       it('should detect available namespace name', function (done) {
         var namespaceName = suite.generateId(namespacePrefix, namespaces);
-        suite.execute(util.format('sb namespace check %s --json', namespaceName), function (result) {
+        suite.execute('sb namespace check %s --json', namespaceName, function (result) {
           result.text.should.not.be.null;
           result.exitStatus.should.equal(0);
 
