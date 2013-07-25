@@ -38,6 +38,15 @@ function MockedTestUtils(testPrefix, forceMocked) {
   this.isRecording = process.env.AZURE_NOCK_RECORD;
 }
 
+var executeCmd = function (cmd, callback) {
+  if (suit.isMocked && !suit.isRecording) {
+    cmd.push('-s');
+    cmd.push(process.env.AZURE_SUBSCRIPTION_ID);
+  }
+
+  executeCommand(cmd, callback);
+};
+
 MockedTestUtils.prototype.setupSuite = function (callback) {
   if (this.isMocked) {
     process.env.AZURE_ENABLE_STRICT_SSL = false;
