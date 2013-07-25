@@ -36,7 +36,7 @@ function CLITest(testPrefix, forceMocked) {
   if (forceMocked) {
     this.isMocked = true;
   } else {
-    this.isMocked = !process.env.NOCK_OFF;
+    this.isMocked = testPrefix && !process.env.NOCK_OFF;
   }
 
   this.isRecording = process.env.AZURE_NOCK_RECORD;
@@ -127,7 +127,7 @@ _.extend(CLITest.prototype, {
 
   execute: function (cmd, callback) {
     if (_.isString(cmd)) {
-      cmd = cmd.match(/([^\s]*\"[^\"]+\"[^\s]*)|[-.:A-Za-z0-9_]+/g);
+      cmd = cmd.match(/([^\s]*\"[^\"]+\"[^\s]*)|[-.:\/!$A-Za-z0-9_]+/g);
       for (var i = 0; i < cmd.length; i++) {
         if (cmd[i][0] === '"' && cmd[i][cmd[i].length - 1] === '"') {
           cmd[i] = cmd[i].substring(1, cmd[i].length - 1);
