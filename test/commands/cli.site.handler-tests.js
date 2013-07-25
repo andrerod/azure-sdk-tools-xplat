@@ -59,7 +59,7 @@ describe('cli', function(){
         }
 
         var siteName = createdSites.pop();
-        var cmd = ('node cli.js site delete ' + siteName + ' --json --quiet').split(' ');
+        var cmd = util.format('site delete %s --json --quiet', siteName);
         executeCmd(cmd, function () {
           removeSite();
         });
@@ -73,17 +73,16 @@ describe('cli', function(){
       var extension = '.js';
 
       // Create site
-      var cmd = ('node cli.js site create ' + siteName + ' --json --location').split(' ');
-      cmd.push(location);
+      var cmd = util.format('site create %s --json --location "%s"', siteName, location);
       executeCmd(cmd, function (result) {
         result.text.should.equal('');
         result.exitStatus.should.equal(0);
 
-        cmd = ('node cli.js site handler list ' + siteName + ' --json ').split(' ');
+        cmd = util.format('site handler list %s --json', siteName);
         executeCmd(cmd, function (result) {
           result.exitStatus.should.equal(0);
 
-          cmd = ('node cli.js site handler add ' + extension + ' c: ' + siteName + ' --json').split(' ');
+          cmd = util.format('site handler add %s c: %s --json', extension, siteName);
           executeCmd(cmd, function (result) {
             result.text.should.equal('');
             result.exitStatus.should.equal(0);

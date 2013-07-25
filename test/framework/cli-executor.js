@@ -28,6 +28,11 @@ exports = module.exports = {
 };
 
 function execute(cmd, cb) {
+  if (cmd[0] !== 'node') {
+    cmd.unshift('cli.js');
+    cmd.unshift('node');
+  }
+
   var sandbox = sinon.sandbox.create();
 
   var result = {
