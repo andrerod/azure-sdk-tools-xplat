@@ -12,67 +12,47 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
-
-var _ = require('underscore');
-
 var should = require('should');
-var mocha = require('mocha');
 
-var util = require('util');
-var uuid = require('node-uuid');
-var executeCommand = require('../framework/cli-executor').execute;
-var MockedTestUtils = require('../framework/mocked-test-utils');
+var CLITest = require('../framework/cli-test');
 
 var AFFINITYGROUP_NAME_PREFIX = 'xplatcli-';
 var AFFINITYGROUP_LOCATION = process.env.AZURE_SITE_TEST_LOCATION || 'West US';
 
 var createdAffinityGroups = [];
 
-var suiteUtil;
-var testPrefix = 'cli.affinitygroup-tests';
+var testPrefix = 'affinitygroup-tests';
 
-var executeCmd = function (cmd, callback) {
-  if (suiteUtil.isMocked && !suiteUtil.isRecording) {
-    cmd.push('-s');
-    cmd.push(process.env.AZURE_SUBSCRIPTION_ID);
-  }
-
-  executeCommand(cmd, callback);
-};
-
-describe('cli', function () {
+describe('account affinity-group', function () {
+  var suite;
   var affinityGroupName;
 
   before(function (done) {
-    suiteUtil = new MockedTestUtils(testPrefix);
-    affinityGroupName = suiteUtil.generateId(AFFINITYGROUP_NAME_PREFIX, createdAffinityGroups);
+    suite = new CLITest(testPrefix);
+    affinityGroupName = suite.generateId(AFFINITYGROUP_NAME_PREFIX, createdAffinityGroups);
 
-    suiteUtil.setupSuite(done);
+    suite.setupSuite(done);
   });
 
   after(function (done) {
-    suiteUtil.teardownSuite(done);
+    suite.teardownSuite(done);
   });
 
   beforeEach(function (done) {
-    suiteUtil.setupTest(done);
+    suite.setupTest(done);
   });
 
   afterEach(function (done) {
-    suiteUtil.teardownTest(done);
+    suite.teardownTest(done);
   });
 
   describe('account affinity-group create', function () {
     it('should succeed', function (done) {
-      var cmd = ('node cli.js account affinity-group create').split(' ');
-      cmd.push(affinityGroupName);
-      cmd.push('--location');
-      cmd.push(AFFINITYGROUP_LOCATION);
-      cmd.push('--description');
-      cmd.push('AG-DESC');
-      cmd.push('--json');
+      suite.execute('account affinity-group create %s --location %s --description AG-DESC --json',
+        affinityGroupName,
+        AFFINITYGROUP_LOCATION,
+        function (result) {
 
-      executeCmd(cmd, function (result) {
         result.exitStatus.should.equal(0);
         result.text.should.be.empty;
 
@@ -83,11 +63,7 @@ describe('cli', function () {
 
   describe('account affinity-group show', function () {
     it('should fail if name is invalid', function (done) {
-      var cmd = ('node cli.js account affinity-group show').split(' ');
-      cmd.push('!NotValid$');
-      cmd.push('--json');
-
-      executeCmd(cmd, function (result) {
+      suite.execute('account affinity-group show !NotValid$ --json', function (result) {
         result.exitStatus.should.equal(1);
         result.errorText.should.not.be.empty;
         result.text.should.be.empty;
@@ -97,11 +73,7 @@ describe('cli', function () {
     });
 
     it('should succeed', function (done) {
-      var cmd = ('node cli.js account affinity-group show').split(' ');
-      cmd.push(affinityGroupName);
-      cmd.push('--json');
-
-      executeCmd(cmd, function (result) {
+      suite.execute('account affinity-group show %s --json', affinityGroupName, function (result) {
         result.exitStatus.should.equal(0);
 
         var affinityGroup = JSON.parse(result.text);
@@ -118,10 +90,7 @@ describe('cli', function () {
 
   describe('account affinity-group list', function () {
     it('should succeed', function (done) {
-      var cmd = ('node cli.js account affinity-group list').split(' ');
-      cmd.push('--json');
-
-      executeCmd(cmd, function (result) {
+      suite.execute('account affinity-group list --json', function (result) {
         result.exitStatus.should.equal(0);
 
         var found = false;
@@ -144,12 +113,7 @@ describe('cli', function () {
 
   describe('account affinity-group delete', function () {
     it('should fail if name is invalid', function (done) {
-      var cmd = ('node cli.js account affinity-group delete').split(' ');
-      cmd.push('!NotValid$');
-      cmd.push('--quiet');
-      cmd.push('--json');
-
-      executeCmd(cmd, function (result) {
+      suite.execute('account affinity-group delete !NotValid$ --quiet --json', function (result) {
         result.exitStatus.should.equal(1);
         result.errorText.should.not.be.empty;
         result.text.should.be.empty;
@@ -159,12 +123,7 @@ describe('cli', function () {
     });
 
     it('should succeed', function (done) {
-      var cmd = ('node cli.js account affinity-group delete').split(' ');
-      cmd.push(affinityGroupName);
-      cmd.push('--quiet');
-      cmd.push('--json');
-
-      executeCmd(cmd, function (result) {
+      suite.execute('account affinity-group delete %s --quiet --json', affinityGroupName, function (result) {
         result.exitStatus.should.equal(0);
         result.text.should.be.empty;
 
