@@ -1,8 +1,8 @@
 commands/cli.account-tests.js
 commands/cli.account.environment-tests.js
-# commands/cli.account.storage-tests.js
+commands/cli.account.storage-tests.js
 commands/cli.affinitygroup-tests.js
-# commands/cli.cloudservice-tests.js
+commands/cli.cloudservice-tests.js
 # commands/cli.deployment-tests.js
 # commands/cli.mobile-tests.js
 # commands/cli.mobilerecover-tests.js

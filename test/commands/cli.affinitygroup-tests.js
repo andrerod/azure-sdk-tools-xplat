@@ -18,120 +18,121 @@ var util = require('util');
 var should = require('should');
 
 var CLITest = require('../framework/cli-test');
-var suite;
 
 var AFFINITYGROUP_NAME_PREFIX = 'xplatcli-';
 var AFFINITYGROUP_LOCATION = process.env.AZURE_SITE_TEST_LOCATION || 'West US';
 
 var createdAffinityGroups = [];
 
-var suite;
 var testPrefix = 'cli.affinitygroup-tests';
 
 describe('cli', function () {
-  var affinityGroupName;
+  describe('account affinity-group', function () {
+    var suite;
+    var affinityGroupName;
 
-  before(function (done) {
-    suite = new CLITest(testPrefix);
-    affinityGroupName = suite.generateId(AFFINITYGROUP_NAME_PREFIX, createdAffinityGroups);
+    before(function (done) {
+      suite = new CLITest(testPrefix);
+      affinityGroupName = suite.generateId(AFFINITYGROUP_NAME_PREFIX, createdAffinityGroups);
 
-    suite.setupSuite(done);
-  });
-
-  after(function (done) {
-    suite.teardownSuite(done);
-  });
-
-  beforeEach(function (done) {
-    suite.setupTest(done);
-  });
-
-  afterEach(function (done) {
-    suite.teardownTest(done);
-  });
-
-  describe('account affinity-group create', function () {
-    it('should succeed', function (done) {
-      suite.execute(util.format('account affinity-group create %s --location %s --description AG-DESC --json',
-        affinityGroupName,
-        AFFINITYGROUP_LOCATION),
-        function (result) {
-
-        result.exitStatus.should.equal(0);
-        result.text.should.be.empty;
-
-        done();
-      });
-    });
-  });
-
-  describe('account affinity-group show', function () {
-    it('should fail if name is invalid', function (done) {
-      suite.execute('account affinity-group show !NotValid$ --json', function (result) {
-        result.exitStatus.should.equal(1);
-        result.errorText.should.not.be.empty;
-        result.text.should.be.empty;
-
-        done();
-      });
+      suite.setupSuite(done);
     });
 
-    it('should succeed', function (done) {
-      suite.execute(util.format('account affinity-group show %s --json', affinityGroupName), function (result) {
-        result.exitStatus.should.equal(0);
-
-        var affinityGroup = JSON.parse(result.text);
-
-        affinityGroup.Name.should.equal(affinityGroupName);
-        affinityGroup.Description.should.equal('AG-DESC');
-        affinityGroup.Location.should.equal(AFFINITYGROUP_LOCATION);
-        affinityGroup.Label.should.equal(new Buffer(affinityGroupName).toString('base64'));
-
-        done();
-      });
+    after(function (done) {
+      suite.teardownSuite(done);
     });
-  });
 
-  describe('account affinity-group list', function () {
-    it('should succeed', function (done) {
-      suite.execute('account affinity-group list --json', function (result) {
-        result.exitStatus.should.equal(0);
+    beforeEach(function (done) {
+      suite.setupTest(done);
+    });
 
-        var found = false;
-        JSON.parse(result.text).forEach(function (affinityGroup) {
-          if(affinityGroup.Name === affinityGroupName) {
-            found = true;
+    afterEach(function (done) {
+      suite.teardownTest(done);
+    });
 
-            affinityGroup.Name.should.equal(affinityGroupName);
-            affinityGroup.Description.should.equal('AG-DESC');
-            affinityGroup.Location.should.equal(AFFINITYGROUP_LOCATION);
-            affinityGroup.Label.should.equal(new Buffer(affinityGroupName).toString('base64'));
-          }
+    describe('account affinity-group create', function () {
+      it('should succeed', function (done) {
+        suite.execute(util.format('account affinity-group create %s --location %s --description AG-DESC --json',
+          affinityGroupName,
+          AFFINITYGROUP_LOCATION),
+          function (result) {
+
+          result.exitStatus.should.equal(0);
+          result.text.should.be.empty;
+
+          done();
         });
-        found.should.equal(true);
-
-        done();
-      });
-    });
-  });
-
-  describe('account affinity-group delete', function () {
-    it('should fail if name is invalid', function (done) {
-      suite.execute('account affinity-group delete !NotValid$ --quiet --json', function (result) {
-        result.exitStatus.should.equal(1);
-        result.errorText.should.not.be.empty;
-        result.text.should.be.empty;
-
-        done();
       });
     });
 
-    it('should succeed', function (done) {
-      suite.execute(util.format('account affinity-group delete %s --quiet --json', affinityGroupName), function (result) {
-        result.exitStatus.should.equal(0);
-        result.text.should.be.empty;
+    describe('account affinity-group show', function () {
+      it('should fail if name is invalid', function (done) {
+        suite.execute('account affinity-group show !NotValid$ --json', function (result) {
+          result.exitStatus.should.equal(1);
+          result.errorText.should.not.be.empty;
+          result.text.should.be.empty;
 
-        done();
+          done();
+        });
+      });
+
+      it('should succeed', function (done) {
+        suite.execute(util.format('account affinity-group show %s --json', affinityGroupName), function (result) {
+          result.exitStatus.should.equal(0);
+
+          var affinityGroup = JSON.parse(result.text);
+
+          affinityGroup.Name.should.equal(affinityGroupName);
+          affinityGroup.Description.should.equal('AG-DESC');
+          affinityGroup.Location.should.equal(AFFINITYGROUP_LOCATION);
+          affinityGroup.Label.should.equal(new Buffer(affinityGroupName).toString('base64'));
+
+          done();
+        });
+      });
+    });
+
+    describe('account affinity-group list', function () {
+      it('should succeed', function (done) {
+        suite.execute('account affinity-group list --json', function (result) {
+          result.exitStatus.should.equal(0);
+
+          var found = false;
+          JSON.parse(result.text).forEach(function (affinityGroup) {
+            if(affinityGroup.Name === affinityGroupName) {
+              found = true;
+
+              affinityGroup.Name.should.equal(affinityGroupName);
+              affinityGroup.Description.should.equal('AG-DESC');
+              affinityGroup.Location.should.equal(AFFINITYGROUP_LOCATION);
+              affinityGroup.Label.should.equal(new Buffer(affinityGroupName).toString('base64'));
+            }
+          });
+          found.should.equal(true);
+
+          done();
+        });
+      });
+    });
+
+    describe('account affinity-group delete', function () {
+      it('should fail if name is invalid', function (done) {
+        suite.execute('account affinity-group delete !NotValid$ --quiet --json', function (result) {
+          result.exitStatus.should.equal(1);
+          result.errorText.should.not.be.empty;
+          result.text.should.be.empty;
+
+          done();
+        });
+      });
+
+      it('should succeed', function (done) {
+        suite.execute(util.format('account affinity-group delete %s --quiet --json', affinityGroupName), function (result) {
+          result.exitStatus.should.equal(0);
+          result.text.should.be.empty;
+
+          done();
+        });
       });
     });
   });
