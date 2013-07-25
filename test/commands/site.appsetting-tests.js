@@ -21,7 +21,7 @@ var CLITest = require('../framework/cli-test');
 var createdSites = [];
 
 var suite;
-var testPrefix = 'appsetting-tests';
+var testPrefix = 'site.appsetting-tests';
 
 var siteNamePrefix = 'clitests';
 var siteNames = [];
@@ -30,7 +30,7 @@ var location = process.env.AZURE_SITE_TEST_LOCATION || 'East US';
 
 describe('site appsetting', function() {
   before(function (done) {
-    suite = new MockedTestUtils(testPrefix);
+    suite = new CLITest(testPrefix);
     suite.setupSuite(done);
   });
 
@@ -86,7 +86,7 @@ describe('site appsetting', function() {
               result.text.should.equal('');
               result.exitStatus.should.equal(0);
 
-              suite.execute(util.format('node cli.js site appsetting list %s --json', siteName), function (result) {
+              suite.execute(util.format('site appsetting list %s --json', siteName), function (result) {
                 var settingsList = JSON.parse(result.text);
 
                 // Listing should return 2 setting now
