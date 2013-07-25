@@ -12,19 +12,19 @@ commands/site.connectionstring-tests.js
 commands/site.deployment-tests.js
 commands/site.deploymentscript-tests.js
 commands/site.diagnostic-tests.js
-# commands/site.domain-tests.js
+commands/site.domain-tests.js
 commands/site.handler-tests.js
-# commands/site.scale-tests.js
-# commands/vm-tests.js
-# commands/sql-tests.js
-# commands/storage.blob-tests.js
-# util/git/linkrevisioncontrol-tests.js
-# util/utils-tests.js
-# hdinsight/unit-cli-setup.js
-# hdinsight/unit-cli-setup.js
-# hdinsight/unit-list-command.js
-# hdinsight/unit-show-command.js
-# hdinsight/unit-delete-command.js
-# hdinsight/unit-create-command.js
-# hdinsight/unit-config-commands.js
+commands/site.scale-tests.js
+commands/vm-tests.js
+commands/sql-tests.js
+commands/storage.blob-tests.js
+util/git/linkrevisioncontrol-tests.js
+util/utils-tests.js
+hdinsight/unit-cli-setup.js
+hdinsight/unit-cli-setup.js
+hdinsight/unit-list-command.js
+hdinsight/unit-show-command.js
+hdinsight/unit-delete-command.js
+hdinsight/unit-create-command.js
+hdinsight/unit-config-commands.js
 commands/cli.site.log-tests.js

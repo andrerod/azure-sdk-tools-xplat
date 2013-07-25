@@ -15,118 +15,102 @@
 
 var should = require('should');
 var utils = require('../../lib/util/utils');
-var executeCommand = require('../framework/cli-executor').execute;
-var MockedTestUtils = require('../framework/mocked-test-utils');
+
+var CLITest = require('../framework/cli-test');
 
 var storageNamesPrefix = 'cstorage';
 var storageNames = [];
 
-var suiteUtil;
+var suite;
 var testPrefix = 'storage.account-tests';
 
-var executeCmd = function (cmd, callback) {
-  if (suiteUtil.isMocked && !suiteUtil.isRecording) {
-    cmd.push('-s');
-    cmd.push(process.env.AZURE_SUBSCRIPTION_ID);
-  }
+describe('account storage', function () {
+  var storageName;
 
-  executeCommand(cmd, callback);
-};
+  before(function (done) {
+    suite = new CLITest(testPrefix);
 
-describe('cli', function () {
-  describe('account storage', function () {
-    var storageName;
+    if (suite.isMocked) {
+      utils.POLL_REQUEST_INTERVAL = 0;
+    }
 
-    before(function (done) {
-      suiteUtil = new MockedTestUtils(testPrefix);
+    suite.setupSuite(done);
+  });
 
-      if (suiteUtil.isMocked) {
-        utils.POLL_REQUEST_INTERVAL = 0;
-      }
+  after(function (done) {
+    suite.teardownSuite(done);
+  });
 
-      suiteUtil.setupSuite(done);
+  beforeEach(function (done) {
+    suite.setupTest(done);
+  });
+
+  afterEach(function (done) {
+    suite.teardownTest(done);
+  });
+
+  it('should create a storage account', function(done) {
+    storageName = suite.generateId(storageNamesPrefix, storageNames);
+
+    suite.execute('account storage create %s --json --location %s',
+      storageName,
+      process.env.AZURE_STORAGE_TEST_LOCATION || 'East US',
+      function (result) {
+      result.text.should.equal('');
+      result.exitStatus.should.equal(0);
+
+      done();
     });
+  });
 
-    after(function (done) {
-      suiteUtil.teardownSuite(done);
+  it('should list storage accounts', function(done) {
+    suite.execute('account storage list --json', function (result) {
+      var storageAccounts = JSON.parse(result.text);
+      storageAccounts.some(function (account) {
+        return account.ServiceName === storageName;
+      }).should.be.true;
+
+      done();
     });
+  });
 
-    beforeEach(function (done) {
-      suiteUtil.setupTest(done);
-    });
+  it('should update storage accounts', function(done) {
+    suite.execute('account storage update %s --label test --json', storageName, function (result) {
+      result.text.should.equal('');
+      result.exitStatus.should.equal(0);
 
-    afterEach(function (done) {
-      suiteUtil.teardownTest(done);
-    });
-
-    it('should create a storage account', function(done) {
-      storageName = suiteUtil.generateId(storageNamesPrefix, storageNames);
-
-      var cmd = ('node cli.js account storage create ' + storageName + ' --json --location').split(' ');
-      cmd.push(process.env.AZURE_STORAGE_TEST_LOCATION || 'East US');
-      executeCmd(cmd, function (result) {
-        result.text.should.equal('');
-        result.exitStatus.should.equal(0);
+      suite.execute('account storage show %s --json', storageName, function (result) {
+        var storageAccount = JSON.parse(result.text);
+        new Buffer(storageAccount.StorageServiceProperties.Label, 'base64').toString('ascii').should.equal('test');
 
         done();
       });
     });
+  });
 
-    it('should list storage accounts', function(done) {
-      var cmd = ('node cli.js account storage list --json').split(' ');
-      executeCmd(cmd, function (result) {
-        var storageAccounts = JSON.parse(result.text);
-        storageAccounts.some(function (account) {
-          return account.ServiceName === storageName;
-        }).should.be.true;
+  it('should renew storage keys', function(done) {
+    suite.execute('account storage keys list %s --json', storageName, function (result) {
+      var storageAccountKeys = JSON.parse(result.text);
+      storageAccountKeys.Primary.should.not.be.null;
+      storageAccountKeys.Secondary.should.not.be.null;
 
-        done();
-      });
-    });
-
-    it('should update storage accounts', function(done) {
-      var cmd = ('node cli.js account storage update ' + storageName + ' --label test --json').split(' ');
-      executeCmd(cmd, function (result) {
+      suite.execute('account storage keys renew %s --primary --json', storageName, function (result) {
         result.text.should.equal('');
         result.exitStatus.should.equal(0);
 
-        var cmd = ('node cli.js account storage show ' + storageName + ' --json').split(' ');
-        executeCmd(cmd, function (result) {
-          var storageAccount = JSON.parse(result.text);
-          new Buffer(storageAccount.StorageServiceProperties.Label, 'base64').toString('ascii').should.equal('test');
+        function deleteUsedStorage (storages) {
+          if (storages.length > 0) {
+            var storage = storages.pop();
 
-          done();
-        });
-      });
-    });
-
-    it('should renew storage keys', function(done) {
-      var cmd = ('node cli.js account storage keys list ' + storageName + ' --json').split(' ');
-      executeCmd(cmd, function (result) {
-        var storageAccountKeys = JSON.parse(result.text);
-        storageAccountKeys.Primary.should.not.be.null;
-        storageAccountKeys.Secondary.should.not.be.null;
-
-        var cmd = ('node cli.js account storage keys renew ' + storageName + ' --primary --json').split(' ');
-        executeCmd(cmd, function (result) {
-          result.text.should.equal('');
-          result.exitStatus.should.equal(0);
-
-          function deleteUsedStorage (storages) {
-            if (storages.length > 0) {
-              var storage = storages.pop();
-
-              var cmd = ('node cli.js account storage delete ' + storage + ' --quiet --json').split(' ');
-              executeCmd(cmd, function () {
-                deleteUsedStorage(storages);
-              });
-            } else {
-              done();
-            }
+            executeCmd('account storage delete %s --quiet --json', storage, function () {
+              deleteUsedStorage(storages);
+            });
+          } else {
+            done();
           }
+        }
 
-          deleteUsedStorage(storageNames);
-        });
+        deleteUsedStorage(storageNames);
       });
     });
   });

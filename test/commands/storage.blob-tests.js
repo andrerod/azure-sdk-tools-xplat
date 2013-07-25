@@ -15,141 +15,118 @@
 
 var should = require('should');
 var utils = require('../../lib/util/utils');
-var executeCmd = require('../framework/cli-executor').execute;
-var MockedTestUtils = require('../framework/mocked-test-utils');
-var util = require('util');
 
-var suiteUtil;
+var CLITest = require('../framework/cli-test');
+
+var suite;
 var testPrefix = 'storage.blob-tests';
 var fakeConnectionString = 'DefaultEndpointsProtocol=https;AccountName=yaotest;AccountKey=null';
 
 /**
 * Convert a cmd to azure storge cli
 */
-String.prototype.toStorageCmd = function () {
-  var azurejs = 'cli.js';
-  var storageCmd = 'node ' + azurejs + ' storage ';
-  var options = '--json';
-  var self = this.trim();
-  var cmds = storageCmd;
-  if (self.length) {
-    cmds += self;
-  }
-  cmds = cmds.split(' ');
-  cmds.push(options);
-  return cmds;
-}
+describe('storage', function() {
+  var savedConnectionString = '';
 
-describe('cli', function() {
-  describe('storage', function() {
-    var savedConnectionString = '';
+  before(function (done) {
+    if (!process.env.AZURE_NOCK_RECORD) {
+      savedConnectionString = process.env.AZURE_STORAGE_CONNECTION_STRING;
+      process.env.AZURE_STORAGE_CONNECTION_STRING = fakeConnectionString;
+    }
 
-    before(function (done) {
-      if (!process.env.AZURE_NOCK_RECORD) {
-        savedConnectionString = process.env.AZURE_STORAGE_CONNECTION_STRING;
-        process.env.AZURE_STORAGE_CONNECTION_STRING = fakeConnectionString;
-      }
+    suite = new CLITest(testPrefix);
 
-      suiteUtil = new MockedTestUtils(testPrefix);
+    if (suite.isMocked) {
+      utils.POLL_REQUEST_INTERVAL = 0;
+    }
 
-      if (suiteUtil.isMocked) {
-        utils.POLL_REQUEST_INTERVAL = 0;
-      }
+    suite.setupSuite(done);
+  });
 
-      suiteUtil.setupSuite(done);
+  after(function (done) {
+    if (!process.env.AZURE_NOCK_RECORD) {
+      process.env.AZURE_STORAGE_CONNECTION_STRING = savedConnectionString;
+    }
+    suite.teardownSuite(done);
+  });
+
+  beforeEach(function (done) {
+    suite.setupTest(done);
+  });
+
+  afterEach(function (done) {
+    suite.teardownTest(done);
+  });
+
+  describe('container', function() {
+    var containerName = 'storageclitest';
+    describe('create', function() {
+      it('should create a new container', function(done) {
+        suite.execute('storage container create %s --json', containerName, function(result) {
+          var container = JSON.parse(result.text);
+          container.name.should.equal(containerName);
+          container.publicAccessLevel.should.equal('Off');
+          done();
+        });
+      });
     });
 
-    after(function (done) {
-      if (!process.env.AZURE_NOCK_RECORD) {
-        process.env.AZURE_STORAGE_CONNECTION_STRING = savedConnectionString;
-      }
-      suiteUtil.teardownSuite(done);
-    });
+    describe('list', function() {
+      it('should list all storage containers', function(done) {
+        suite.execute('storage container list --json', function(result) {
+          var containers = JSON.parse(result.text);
+          containers.length.should.greaterThan(0);
+          containers.forEach(function(container) {
+            container.name.length.should.greaterThan(0);
+          });
+          containers.some(function(container) {
+            return container.publicAccessLevel == 'Container'
+              || container.publicAccessLevel == 'Blob'
+              || container.publicAccessLevel == 'Off';
+          }).should.be.true;
+          done();
+        });
+      });
 
-    beforeEach(function (done) {
-      suiteUtil.setupTest(done);
-    });
-
-    afterEach(function (done) {
-      suiteUtil.teardownTest(done);
-    });
-
-    describe('container', function() {
-      var containerName = 'storageclitest';
-      describe('create', function() {
-        it('should create a new container', function(done) {
-          var cmd = util.format('container create %s', containerName).toStorageCmd();
-          executeCmd(cmd, function(result) {
-            var container = JSON.parse(result.text);
+      it('should support wildcard', function(done) {
+        suite.execute('storage container list %s* --json', containerName, function(result) {
+          var containers = JSON.parse(result.text);
+          containers.length.should.greaterThan(0);
+          containers.forEach(function(container) {
             container.name.should.equal(containerName);
-            container.publicAccessLevel.should.equal('Off');
-            done();
           });
-        });
-      });
-
-      describe('list', function() {
-        it('should list all storage containers', function(done) {
-          var cmd = "container list".toStorageCmd();
-          executeCmd(cmd, function(result) {
-            var containers = JSON.parse(result.text);
-            containers.length.should.greaterThan(0);
-            containers.forEach(function(container) {
-              container.name.length.should.greaterThan(0);
-            });
-            containers.some(function(container) {
-              return container.publicAccessLevel == 'Container'
-                || container.publicAccessLevel == 'Blob'
-                || container.publicAccessLevel == 'Off';
-            }).should.be.true;
-            done();
-          });
-        });
-
-        it('should support wildcard', function(done) {
-          var cmd = util.format('container list %s*', containerName).toStorageCmd();
-          executeCmd(cmd, function(result) {
-            var containers = JSON.parse(result.text);
-            containers.length.should.greaterThan(0);
-            containers.forEach(function(container) {
-              container.name.should.equal(containerName);
-            });
-            done();
-          });
-        });
-      });
-
-      describe('show', function() {
-        it('should show details of the specified container', function(done) {
-          var cmd = util.format('container show %s', containerName).toStorageCmd();
-          executeCmd(cmd, function(result) {
-            var container = JSON.parse(result.text);
-            container.name.should.equal(containerName);
-            done();
-          });
-        });
-      });
-
-      describe('set', function() {
-        it('should set the container permission', function(done) {
-          var cmd = util.format('container set %s -p container', containerName).toStorageCmd();
-          executeCmd(cmd, function(result) {
-            var container = JSON.parse(result.text);
-            container.name.should.equal(containerName);
-            container.publicAccessLevel.should.equal('Container');
-            done();
-          });
-        });
-      });
-
-      describe('delete', function() {
-        it('should delete the specified container', function(done) {
-          var cmd = util.format('container delete %s -q', containerName).toStorageCmd();
-          executeCmd(cmd, function(result) {
-            done();
-          });
+          done();
         });
       });
     });
-  }); 
+
+    describe('show', function() {
+      it('should show details of the specified container --json', function(done) {
+        suite.execute('storage container show %s', containerName, function(result) {
+          var container = JSON.parse(result.text);
+          container.name.should.equal(containerName);
+          done();
+        });
+      });
+    });
+
+    describe('set', function() {
+      it('should set the container permission', function(done) {
+        suite.execute('storage container set %s -p container --json', function(result) {
+          var container = JSON.parse(result.text);
+          container.name.should.equal(containerName);
+          container.publicAccessLevel.should.equal('Container');
+          done();
+        });
+      });
+    });
+
+    describe('delete', function() {
+      it('should delete the specified container', function(done) {
+        suite.execute('container delete %s -q --json', containerName, function(result) {
+          done();
+        });
+      });
+    });
+  });
 });

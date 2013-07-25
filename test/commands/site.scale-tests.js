@@ -13,124 +13,97 @@
 * limitations under the License.
 */
 
-var fs = require('fs');
-var path = require('path');
-var sinon = require('sinon');
-var utils = require('../../lib/util/utils');
-
-var executeCommand = require('../framework/cli-executor').execute;
-var MockedTestUtils = require('../framework/mocked-test-utils');
+var CLITest = require('../framework/cli-test');
 
 var createdSitesPrefix = 'clisitescale-';
 var createdSites = [];
 
-var suiteUtil;
+var suite;
 var testPrefix = 'site.scale-tests';
 
 var location = process.env.AZURE_SITE_TEST_LOCATION || 'North Europe';
 
-var executeCmd = function (cmd, callback) {
-  if (suiteUtil.isMocked && !suiteUtil.isRecording) {
-    cmd.push('-s');
-    cmd.push(process.env.AZURE_SUBSCRIPTION_ID);
-  }
+describe('site scale', function () {
+  before(function (done) {
+    suite = new CLITest(testPrefix);
+    suite.setupSuite(done);
+  });
 
-  executeCommand(cmd, callback);
-};
+  after(function (done) {
+    suite.teardownSuite(done);
+  });
 
-describe('cli', function () {
-  describe('site scale', function () {
-    before(function (done) {
-      suiteUtil = new MockedTestUtils(testPrefix, true);
-      suiteUtil.setupSuite(done);
-    });
+  beforeEach(function (done) {
+    suite.setupTest(done);
+  });
 
-    after(function (done) {
-      suiteUtil.teardownSuite(done);
-    });
-
-    beforeEach(function (done) {
-      suiteUtil.setupTest(done);
-    });
-
-    afterEach(function (done) {
-      function removeSite(callback) {
-        if (createdSites.length === 0) {
-          return callback();
-        }
-
-        var siteName = createdSites.pop();
-        var cmd = ('node cli.js site delete ' + siteName + ' --json --quiet').split(' ');
-        executeCmd(cmd, function () {
-          removeSite(callback);
-        });
+  afterEach(function (done) {
+    function removeSite(callback) {
+      if (createdSites.length === 0) {
+        return callback();
       }
 
-      removeSite(function () {
-        suiteUtil.teardownTest(function () {
-          done();
-        });
+      var siteName = createdSites.pop();
+      suite.execute('site delete %s --json --quiet', siteName, function () {
+        removeSite(callback);
+      });
+    }
+
+    removeSite(function () {
+      suite.teardownTest(function () {
+        done();
       });
     });
+  });
 
-    it('should be able to set the scale mode', function(done) {
-      var siteName = suiteUtil.generateId(createdSitesPrefix, createdSites);
+  it('should be able to set the scale mode', function(done) {
+    var siteName = suite.generateId(createdSitesPrefix, createdSites);
 
-      var cmd = ('node cli.js site create ' + siteName + ' --json --location').split(' ');
-      cmd.push(location);
-      executeCmd(cmd, function (result) {
+    suite.execute('site create %s --json --location %s', siteName, location, function (result) {
+      result.text.should.equal('');
+      result.exitStatus.should.equal(0);
+
+      suite.execute('site scale mode %s free --json ', siteName, function (result) {
         result.text.should.equal('');
         result.exitStatus.should.equal(0);
 
-        cmd = ('node cli.js site scale mode ' + siteName + ' free --json ').split(' ');
-        executeCmd(cmd, function (result) {
+        suite.execute('site scale mode %s shared --json', siteName, function (result) {
           result.text.should.equal('');
           result.exitStatus.should.equal(0);
 
-          var cmd = ('node cli.js site scale mode ' + siteName + ' shared --json').split(' ');
-          executeCmd(cmd, function (result) {
-            result.text.should.equal('');
-            result.exitStatus.should.equal(0);
-
-            done();
-          });
+          done();
         });
       });
     });
+  });
 
-    describe('instances', function() {
-      var siteName;
+  describe('instances', function() {
+    var siteName;
 
-      beforeEach(function (done) {
-        siteName = suiteUtil.generateId(createdSitesPrefix, createdSites);
+    beforeEach(function (done) {
+      siteName = suite.generateId(createdSitesPrefix, createdSites);
 
-        var cmd = ('node cli.js site create ' + siteName + ' --json --location').split(' ');
-        cmd.push(location);
-        executeCmd(cmd, function () {
-          done();
-        });
+      suite.execute('node cli.js site create %s --json --location %s', siteName, location, function () {
+        done();
       });
+    });
 
-      it('should not be able to set instances on a free site', function (done) {
-        var cmd = ('node cli.js site scale instances ' + siteName + ' 2 small --json ').split(' ');
-        executeCmd(cmd, function (result) {
-          result.errorText.indexOf('Instances can only be changed for sites in standard mode').should.not.equal(-1);
-          result.exitStatus.should.equal(1);
+    it('should not be able to set instances on a free site', function (done) {
+      suite.execute('site scale instances %s 2 small --json ', siteName, function (result) {
+        result.errorText.indexOf('Instances can only be changed for sites in standard mode').should.not.equal(-1);
+        result.exitStatus.should.equal(1);
+
+        done();
+      });
+    });
+
+    it('should be able to set the instances number and size', function(done) {
+      suite.execute('site scale mode %s standard --json', siteName, function () {
+        suite.execute('site scale instances %s 2 small --json ', siteName, function (result) {
+          result.text.should.equal('');
+          result.exitStatus.should.equal(0);
 
           done();
-        });
-      });
-
-      it('should be able to set the instances number and size', function(done) {
-        var cmd = ('node cli.js site scale mode ' + siteName + ' standard --json').split(' ');
-        executeCmd(cmd, function () {
-          cmd = ('node cli.js site scale instances ' + siteName + ' 2 small --json ').split(' ');
-          executeCmd(cmd, function (result) {
-            result.text.should.equal('');
-            result.exitStatus.should.equal(0);
-
-            done();
-          });
         });
       });
     });
