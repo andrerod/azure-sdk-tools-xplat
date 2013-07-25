@@ -14,134 +14,111 @@
 */
 
 var should = require('should');
-var url = require('url');
-var uuid = require('node-uuid');
-var GitHubApi = require('github');
 var util = require('util');
-var cli = require('../../lib/cli');
 
-var executeCommand = require('../framework/cli-executor').execute;
-var MockedTestUtils = require('../framework/mocked-test-utils');
+var CLITest = require('../framework/cli-test');
 
-var suiteUtil;
-var testPrefix = 'cli.sb-tests';
+var suite;
+var testPrefix = 'sb-tests';
 
 var namespacePrefix = 'sbtst';
 var namespaces = [];
 
-var executeCmd = function (cmd, callback) {
-  if (suiteUtil.isMocked && !suiteUtil.isRecording) {
-    cmd.push('-s');
-    cmd.push(process.env.AZURE_SUBSCRIPTION_ID);
-  }
+describe('sb', function() {
+  before(function (done) {
+    suite = new CLITest(testPrefix);
+    suite.setupSuite(done);
+  });
 
-  executeCommand(cmd, callback);
-};
+  after(function (done) {
+    suite.teardownSuite(done);
+  });
 
-describe('cli', function(){
-  describe('sb', function() {
-    before(function (done) {
-      suiteUtil = new MockedTestUtils(testPrefix);
-      suiteUtil.setupSuite(done);
+  beforeEach(function (done) {
+    suite.setupTest(done);
+  });
+
+  afterEach(function (done) {
+    suite.teardownTest(done);
+  });
+
+  describe('location', function () {
+    it('should work', function (done) {
+      suite.execute('sb namespace location list --json', function (result) {
+        result.text.should.not.be.null;
+        result.exitStatus.should.equal(0);
+
+        var locations = JSON.parse(result.text);
+
+        locations.some(function (l) {
+          return l.FullName === 'East Asia';
+        }).should.be.true;
+
+        locations.some(function (l) {
+          return l.FullName === 'West Europe';
+        }).should.be.true;
+
+        locations.some(function (l) {
+          return l.FullName === 'North Europe';
+        }).should.be.true;
+
+        locations.some(function (l) {
+          return l.FullName === 'East US';
+        }).should.be.true;
+
+        locations.some(function (l) {
+          return l.FullName === 'Southeast Asia';
+        }).should.be.true;
+
+        locations.some(function (l) {
+          return l.FullName === 'North Central US';
+        }).should.be.true;
+
+        locations.some(function (l) {
+          return l.FullName === 'West US';
+        }).should.be.true;
+
+        locations.some(function (l) {
+          return l.FullName === 'South Central US';
+        }).should.be.true;
+
+        done();
+      });
     });
+  });
 
-    after(function (done) {
-      suiteUtil.teardownSuite(done);
-    });
+  describe('namespace', function () {
+    describe('check', function () {
+      var namespaceName;
 
-    beforeEach(function (done) {
-      suiteUtil.setupTest(done);
-    });
+      beforeEach(function (done) {
+        namespaceName = suite.generateId(namespacePrefix, namespaces);
 
-    afterEach(function (done) {
-      suiteUtil.teardownTest(done);
-    });
+        suite.execute(util.format('sb namespace create %s --json --region "%s"', namespaceName, 'West US'), function () {
+          done();
+        });
+      });
 
-    describe('location', function () {
-      it('should work', function (done) {
-        var cmd = ('node cli.js sb namespace location list --json').split(' ');
-        executeCmd(cmd, function (result) {
+      it('should detect non available namespace name', function (done) {
+        suite.execute(util.format('sb namespace check %s --json', namespaceName), function (result) {
           result.text.should.not.be.null;
           result.exitStatus.should.equal(0);
 
-          var locations = JSON.parse(result.text);
-
-          locations.some(function (l) {
-            return l.FullName === 'East Asia';
-          }).should.be.true;
-
-          locations.some(function (l) {
-            return l.FullName === 'West Europe';
-          }).should.be.true;
-
-          locations.some(function (l) {
-            return l.FullName === 'North Europe';
-          }).should.be.true;
-
-          locations.some(function (l) {
-            return l.FullName === 'East US';
-          }).should.be.true;
-
-          locations.some(function (l) {
-            return l.FullName === 'Southeast Asia';
-          }).should.be.true;
-
-          locations.some(function (l) {
-            return l.FullName === 'North Central US';
-          }).should.be.true;
-
-          locations.some(function (l) {
-            return l.FullName === 'West US';
-          }).should.be.true;
-
-          locations.some(function (l) {
-            return l.FullName === 'South Central US';
-          }).should.be.true;
+          JSON.parse(result.text).available.should.equal(false);
 
           done();
         });
       });
-    });
 
-    describe('namespace', function () {
-      describe('check', function () {
-        var namespaceName;
+      it('should detect available namespace name', function (done) {
+        var namespaceName = suite.generateId(namespacePrefix, namespaces);
+        suite.execute(util.format('sb namespace check %s --json', namespaceName), function (result) {
+          result.text.should.not.be.null;
+          result.exitStatus.should.equal(0);
 
-        beforeEach(function (done) {
-          namespaceName = suiteUtil.generateId(namespacePrefix, namespaces);
+          JSON.parse(result.text).available.should.equal(true);
 
-          var cmd = ('node cli.js sb namespace create ' + namespaceName + ' --json').split(' ');
-          cmd.push('--region');
-          cmd.push('West US');
-
-          executeCmd(cmd, function () {
-            done();
-          });
-        });
-
-        it('should detect non available namespace name', function (done) {
-          var cmd = ('node cli.js sb namespace check ' + namespaceName + ' --json').split(' ');
-          executeCmd(cmd, function (result) {
-            result.text.should.not.be.null;
-            result.exitStatus.should.equal(0);
-
-            JSON.parse(result.text).available.should.equal(false);
-
-            done();
-          });
-        });
-
-        it('should detect available namespace name', function (done) {
-          var namespaceName = suiteUtil.generateId(namespacePrefix, namespaces);
-          var cmd = ('node cli.js sb namespace check ' + namespaceName + ' --json').split(' ');
-          executeCmd(cmd, function (result) {
-            result.text.should.not.be.null;
-            result.exitStatus.should.equal(0);
-
-            JSON.parse(result.text).available.should.equal(true);
-
-            done();
-          });
+          done();
         });
       });
     });

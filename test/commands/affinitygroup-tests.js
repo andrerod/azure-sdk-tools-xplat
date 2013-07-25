@@ -26,113 +26,111 @@ var createdAffinityGroups = [];
 
 var testPrefix = 'affinitygroup-tests';
 
-describe('cli', function () {
-  describe('account affinity-group', function () {
-    var suite;
-    var affinityGroupName;
+describe('account affinity-group', function () {
+  var suite;
+  var affinityGroupName;
 
-    before(function (done) {
-      suite = new CLITest(testPrefix);
-      affinityGroupName = suite.generateId(AFFINITYGROUP_NAME_PREFIX, createdAffinityGroups);
+  before(function (done) {
+    suite = new CLITest(testPrefix);
+    affinityGroupName = suite.generateId(AFFINITYGROUP_NAME_PREFIX, createdAffinityGroups);
 
-      suite.setupSuite(done);
+    suite.setupSuite(done);
+  });
+
+  after(function (done) {
+    suite.teardownSuite(done);
+  });
+
+  beforeEach(function (done) {
+    suite.setupTest(done);
+  });
+
+  afterEach(function (done) {
+    suite.teardownTest(done);
+  });
+
+  describe('account affinity-group create', function () {
+    it('should succeed', function (done) {
+      suite.execute(util.format('account affinity-group create %s --location %s --description AG-DESC --json',
+        affinityGroupName,
+        AFFINITYGROUP_LOCATION),
+        function (result) {
+
+        result.exitStatus.should.equal(0);
+        result.text.should.be.empty;
+
+        done();
+      });
     });
+  });
 
-    after(function (done) {
-      suite.teardownSuite(done);
-    });
+  describe('account affinity-group show', function () {
+    it('should fail if name is invalid', function (done) {
+      suite.execute('account affinity-group show !NotValid$ --json', function (result) {
+        result.exitStatus.should.equal(1);
+        result.errorText.should.not.be.empty;
+        result.text.should.be.empty;
 
-    beforeEach(function (done) {
-      suite.setupTest(done);
-    });
-
-    afterEach(function (done) {
-      suite.teardownTest(done);
-    });
-
-    describe('account affinity-group create', function () {
-      it('should succeed', function (done) {
-        suite.execute(util.format('account affinity-group create %s --location %s --description AG-DESC --json',
-          affinityGroupName,
-          AFFINITYGROUP_LOCATION),
-          function (result) {
-
-          result.exitStatus.should.equal(0);
-          result.text.should.be.empty;
-
-          done();
-        });
+        done();
       });
     });
 
-    describe('account affinity-group show', function () {
-      it('should fail if name is invalid', function (done) {
-        suite.execute('account affinity-group show !NotValid$ --json', function (result) {
-          result.exitStatus.should.equal(1);
-          result.errorText.should.not.be.empty;
-          result.text.should.be.empty;
+    it('should succeed', function (done) {
+      suite.execute(util.format('account affinity-group show %s --json', affinityGroupName), function (result) {
+        result.exitStatus.should.equal(0);
 
-          done();
-        });
+        var affinityGroup = JSON.parse(result.text);
+
+        affinityGroup.Name.should.equal(affinityGroupName);
+        affinityGroup.Description.should.equal('AG-DESC');
+        affinityGroup.Location.should.equal(AFFINITYGROUP_LOCATION);
+        affinityGroup.Label.should.equal(new Buffer(affinityGroupName).toString('base64'));
+
+        done();
       });
+    });
+  });
 
-      it('should succeed', function (done) {
-        suite.execute(util.format('account affinity-group show %s --json', affinityGroupName), function (result) {
-          result.exitStatus.should.equal(0);
+  describe('account affinity-group list', function () {
+    it('should succeed', function (done) {
+      suite.execute('account affinity-group list --json', function (result) {
+        result.exitStatus.should.equal(0);
 
-          var affinityGroup = JSON.parse(result.text);
+        var found = false;
+        JSON.parse(result.text).forEach(function (affinityGroup) {
+          if(affinityGroup.Name === affinityGroupName) {
+            found = true;
 
-          affinityGroup.Name.should.equal(affinityGroupName);
-          affinityGroup.Description.should.equal('AG-DESC');
-          affinityGroup.Location.should.equal(AFFINITYGROUP_LOCATION);
-          affinityGroup.Label.should.equal(new Buffer(affinityGroupName).toString('base64'));
-
-          done();
+            affinityGroup.Name.should.equal(affinityGroupName);
+            affinityGroup.Description.should.equal('AG-DESC');
+            affinityGroup.Location.should.equal(AFFINITYGROUP_LOCATION);
+            affinityGroup.Label.should.equal(new Buffer(affinityGroupName).toString('base64'));
+          }
         });
+        found.should.equal(true);
+
+        done();
+      });
+    });
+  });
+
+  describe('account affinity-group delete', function () {
+    it('should fail if name is invalid', function (done) {
+      suite.execute('account affinity-group delete !NotValid$ --quiet --json', function (result) {
+        result.exitStatus.should.equal(1);
+        result.errorText.should.not.be.empty;
+        result.text.should.be.empty;
+
+        done();
       });
     });
 
-    describe('account affinity-group list', function () {
-      it('should succeed', function (done) {
-        suite.execute('account affinity-group list --json', function (result) {
-          result.exitStatus.should.equal(0);
+    it('should succeed', function (done) {
+      suite.execute(util.format('account affinity-group delete %s --quiet --json', affinityGroupName), function (result) {
+        result.exitStatus.should.equal(0);
+        result.text.should.be.empty;
 
-          var found = false;
-          JSON.parse(result.text).forEach(function (affinityGroup) {
-            if(affinityGroup.Name === affinityGroupName) {
-              found = true;
-
-              affinityGroup.Name.should.equal(affinityGroupName);
-              affinityGroup.Description.should.equal('AG-DESC');
-              affinityGroup.Location.should.equal(AFFINITYGROUP_LOCATION);
-              affinityGroup.Label.should.equal(new Buffer(affinityGroupName).toString('base64'));
-            }
-          });
-          found.should.equal(true);
-
-          done();
-        });
-      });
-    });
-
-    describe('account affinity-group delete', function () {
-      it('should fail if name is invalid', function (done) {
-        suite.execute('account affinity-group delete !NotValid$ --quiet --json', function (result) {
-          result.exitStatus.should.equal(1);
-          result.errorText.should.not.be.empty;
-          result.text.should.be.empty;
-
-          done();
-        });
-      });
-
-      it('should succeed', function (done) {
-        suite.execute(util.format('account affinity-group delete %s --quiet --json', affinityGroupName), function (result) {
-          result.exitStatus.should.equal(0);
-          result.text.should.be.empty;
-
-          done();
-        });
+        done();
       });
     });
   });

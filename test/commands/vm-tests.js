@@ -29,7 +29,7 @@ var vmPrefix = 'clitestvm1';
 var vmNames = [];
 
 var suiteUtil;
-var testPrefix = 'cli.vm-tests';
+var testPrefix = 'vm-tests';
 
 var currentRandom = 0;
 

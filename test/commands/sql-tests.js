@@ -23,7 +23,7 @@ var executeCommand = require('../framework/cli-executor').execute;
 var MockedTestUtils = require('../framework/mocked-test-utils');
 
 var suiteUtil;
-var testPrefix = 'cli.sql-tests';
+var testPrefix = 'sql-tests';
 
 var location = process.env.AZURE_SQL_TEST_LOCATION || 'West US';
 

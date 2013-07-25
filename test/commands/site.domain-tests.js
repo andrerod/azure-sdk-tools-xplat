@@ -19,7 +19,7 @@ var executeCommand = require('../framework/cli-executor').execute;
 var MockedTestUtils = require('../framework/mocked-test-utils');
 
 var suiteUtil;
-var testPrefix = 'cli.site.domain-tests';
+var testPrefix = 'site.domain-tests';
 
 /**
 * Note: to rerecord this test, an azure website and a cname domain pointing to

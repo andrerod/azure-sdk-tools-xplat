@@ -20,7 +20,7 @@ var MockedTestUtils = require('../framework/mocked-test-utils');
 var util = require('util');
 
 var suiteUtil;
-var testPrefix = 'cli.storage.blob-tests';
+var testPrefix = 'storage.blob-tests';
 var fakeConnectionString = 'DefaultEndpointsProtocol=https;AccountName=yaotest;AccountKey=null';
 
 /**

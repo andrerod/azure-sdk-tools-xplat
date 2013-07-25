@@ -21,7 +21,7 @@ var MockedTestUtils = require('../framework/mocked-test-utils');
 var createdSites = [];
 
 var suiteUtil;
-var testPrefix = 'cli.site.connectionstring-tests';
+var testPrefix = 'site.connectionstring-tests';
 
 var siteNamePrefix = 'contests';
 var siteNames = [];

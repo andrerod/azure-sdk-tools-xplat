@@ -18,72 +18,70 @@ var should = require('should');
 var CLITest = require('../framework/cli-test');
 var suite = new CLITest();
 
-describe('CLI', function () {
-  describe('Environment', function () {
-    before(function (done) {
-      suite.execute('node cli.js account env delete newenv --json', function () {
+describe('account env', function () {
+  before(function (done) {
+    suite.execute('node cli.js account env delete newenv --json', function () {
+      done();
+    });
+  });
+
+  it('should add and show', function (done) {
+    cmd = 'node cli.js account env add newenv --publish-settings-file-url http://url1.com ' +
+      '--management-portal-url http://url2.com --service-endpoint http://url3.com ' +
+      '--storage-endpoint http://url4.com --sql-database-endpoint http://url5.com --json';
+
+    suite.execute(cmd, function (result) {
+      result.exitStatus.should.equal(0);
+
+      suite.execute('node cli.js account env show newenv --json', function (result) {
+        result.exitStatus.should.equal(0);
+
+        var environment = JSON.parse(result.text);
+        environment['publishingProfile'].should.equal('http://url1.com');
+        environment['portal'].should.equal('http://url2.com');
+        environment['serviceEndpoint'].should.equal('http://url3.com');
+        environment['storageEndpoint'].should.equal('http://url4.com');
+        environment['sqlDatabaseEndpoint'].should.equal('http://url5.com');
+
         done();
       });
     });
+  });
 
-    it('should add and show', function (done) {
-      cmd = 'node cli.js account env add newenv --publish-settings-file-url http://url1.com ' +
-        '--management-portal-url http://url2.com --service-endpoint http://url3.com ' +
-        '--storage-endpoint http://url4.com --sql-database-endpoint http://url5.com --json';
+  it('should list', function (done) {
+    suite.execute('node cli.js account env list --json', function (result) {
+      result.exitStatus.should.equal(0);
 
-      suite.execute(cmd, function (result) {
-        result.exitStatus.should.equal(0);
+      var environments = JSON.parse(result.text);
+      should.exist(Object.keys(environments).filter(function (e) {
+        return e === 'AzureCloud';
+      })[0]);
 
-        suite.execute('node cli.js account env show newenv --json', function (result) {
-          result.exitStatus.should.equal(0);
+      should.exist(Object.keys(environments).filter(function (e) {
+        return e === 'AzureChinaCloud';
+      })[0]);
 
-          var environment = JSON.parse(result.text);
-          environment['publishingProfile'].should.equal('http://url1.com');
-          environment['portal'].should.equal('http://url2.com');
-          environment['serviceEndpoint'].should.equal('http://url3.com');
-          environment['storageEndpoint'].should.equal('http://url4.com');
-          environment['sqlDatabaseEndpoint'].should.equal('http://url5.com');
+      should.exist(Object.keys(environments).filter(function (e) {
+        return e === 'newenv';
+      })[0]);
 
-          done();
-        });
-      });
+      done();
     });
+  });
 
-    it('should list', function (done) {
+  it('should delete', function (done) {
+    suite.execute('node cli.js account env delete newenv --json', function (result) {
+      result.exitStatus.should.equal(0);
+
       suite.execute('node cli.js account env list --json', function (result) {
         result.exitStatus.should.equal(0);
 
         var environments = JSON.parse(result.text);
-        should.exist(Object.keys(environments).filter(function (e) {
-          return e === 'AzureCloud';
-        })[0]);
-
-        should.exist(Object.keys(environments).filter(function (e) {
-          return e === 'AzureChinaCloud';
-        })[0]);
-
-        should.exist(Object.keys(environments).filter(function (e) {
+        should.not.exist(Object.keys(environments).filter(function (e) {
           return e === 'newenv';
         })[0]);
 
         done();
-      });
-    });
-
-    it('should delete', function (done) {
-      suite.execute('node cli.js account env delete newenv --json', function (result) {
-        result.exitStatus.should.equal(0);
-
-        suite.execute('node cli.js account env list --json', function (result) {
-          result.exitStatus.should.equal(0);
-
-          var environments = JSON.parse(result.text);
-          should.not.exist(Object.keys(environments).filter(function (e) {
-            return e === 'newenv';
-          })[0]);
-
-          done();
-        });
       });
     });
   });

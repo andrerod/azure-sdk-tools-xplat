@@ -3,21 +3,21 @@ commands/account.environment-tests.js
 commands/account.storage-tests.js
 commands/affinitygroup-tests.js
 commands/cloudservice-tests.js
-# commands/deployment-tests.js
-# commands/mobile-tests.js
-# commands/mobilerecover-tests.js
-# commands/site-tests.js
+commands/mobile-tests.js
+commands/mobilerecover-tests.js
+commands/sb-tests.js
+commands/site-tests.js
 # commands/site.appsetting-tests.js
 # commands/site.connectionstring-tests.js
+commands/site.deployment-tests.js
+# commands/site.deploymentscript-tests.js
 # commands/site.diagnostic-tests.js
 # commands/site.domain-tests.js
 commands/site.handler-tests.js
-# commands/site.deployment-tests.js
 # commands/site.scale-tests.js
 # commands/vm-tests.js
 # commands/sql-tests.js
 # commands/storage.blob-tests.js
-# commands/sb-tests.js
 # util/git/linkrevisioncontrol-tests.js
 # util/utils-tests.js
 # hdinsight/unit-cli-setup.js

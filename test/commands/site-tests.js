@@ -18,8 +18,7 @@ var url = require('url');
 var GitHubApi = require('github');
 var util = require('util');
 
-var executeCommand = require('../framework/cli-executor').execute;
-var MockedTestUtils = require('../framework/mocked-test-utils');
+var CLITest = require('../framework/cli-test');
 
 var LinkedRevisionControlClient = require('../../lib/util/git/linkedrevisioncontrol').LinkedRevisionControlClient;
 
@@ -28,22 +27,13 @@ var githubPassword = process.env['AZURE_GITHUB_PASSWORD'];
 var githubRepositoryFullName = process.env['AZURE_GITHUB_REPOSITORY'];
 var githubClient = new GitHubApi({ version: '3.0.0' });
 
-var suiteUtil;
-var testPrefix = 'cli.site-tests';
+var suite;
+var testPrefix = 'site-tests';
 
 var siteNamePrefix = 'clitests';
 var siteNames = [];
 
 var location = process.env.AZURE_SITE_TEST_LOCATION || 'East US';
-
-var executeCmd = function (cmd, callback) {
-  if (suiteUtil.isMocked && !suiteUtil.isRecording) {
-    cmd.push('-s');
-    cmd.push(process.env.AZURE_SUBSCRIPTION_ID);
-  }
-
-  executeCommand(cmd, callback);
-};
 
 githubClient.authenticate({
   type: 'basic',
@@ -51,106 +41,176 @@ githubClient.authenticate({
   password: githubPassword
 });
 
-describe('cli', function(){
-  describe('site', function() {
-    before(function (done) {
-      suiteUtil = new MockedTestUtils(testPrefix);
-      suiteUtil.setupSuite(done);
-    });
+describe('site', function() {
+  before(function (done) {
+    suite = new CLITest(testPrefix);
+    suite.setupSuite(done);
+  });
 
-    after(function (done) {
-      suiteUtil.teardownSuite(done);
-    });
+  after(function (done) {
+    suite.teardownSuite(done);
+  });
 
-    beforeEach(function (done) {
-      suiteUtil.setupTest(done);
-    });
+  beforeEach(function (done) {
+    suite.setupTest(done);
+  });
 
-    afterEach(function (done) {
-      var repositoryName;
+  afterEach(function (done) {
+    var repositoryName;
 
-      function deleteAllHooks (hooks, callback) {
-        if (hooks.length === 0) {
-          suiteUtil.teardownTest(done);
-        } else {
-          var hook = hooks.pop();
-          hook.user = githubUsername;
-          hook.repo = repositoryName;
+    function deleteAllHooks (hooks, callback) {
+      if (hooks.length === 0) {
+        suite.teardownTest(done);
+      } else {
+        var hook = hooks.pop();
+        hook.user = githubUsername;
+        hook.repo = repositoryName;
 
-          githubClient.repos.deleteHook(hook, function () {
-            deleteAllHooks(hooks, callback);
-          });
-        }
+        githubClient.repos.deleteHook(hook, function () {
+          deleteAllHooks(hooks, callback);
+        });
       }
+    }
 
-      // Remove any existing repository hooks
-      githubClient.repos.getFromUser({ user: githubUsername }, function (err, repositories) {
-        repositoryName = LinkedRevisionControlClient._getRepository(repositories, githubRepositoryFullName).name;
+    // Remove any existing repository hooks
+    githubClient.repos.getFromUser({ user: githubUsername }, function (err, repositories) {
+      repositoryName = LinkedRevisionControlClient._getRepository(repositories, githubRepositoryFullName).name;
 
-        githubClient.repos.getHooks({
-          user: githubUsername,
-          repo: repositoryName
-        }, function (err, hooks) {
-          deleteAllHooks(hooks, done);
+      githubClient.repos.getHooks({
+        user: githubUsername,
+        repo: repositoryName
+      }, function (err, hooks) {
+        deleteAllHooks(hooks, done);
+      });
+    });
+  });
+
+  it('create a site', function(done) {
+    var siteName = suite.generateId(siteNamePrefix, siteNames);
+
+    // Create site
+    suite.execute(util.format('site create %s --json --location "%s"', siteName, location), function (result) {
+      result.text.should.equal('');
+      result.errorText.should.equal('');
+      result.exitStatus.should.equal(0);
+
+      // List sites
+      suite.execute('site list --json', function (result) {
+        var siteList = JSON.parse(result.text);
+
+        var siteExists = siteList.some(function (site) {
+          return site.Name.toLowerCase() === siteName.toLowerCase();
+        });
+
+        siteExists.should.be.ok;
+
+        // Delete created site
+        suite.execute(util.format('site delete %s --json --quiet', siteName), function (result) {
+          result.text.should.equal('');
+          result.exitStatus.should.equal(0);
+
+          // List sites
+          suite.execute('site list --json', function (result) {
+            if (result.text !== '') {
+              siteList = JSON.parse(result.text);
+
+              siteExists = siteList.some(function (site) {
+                return site.Name.toLowerCase() === siteName.toLowerCase();
+              });
+
+              siteExists.should.not.be.ok;
+            }
+
+            done();
+          });
         });
       });
     });
+  });
 
-    it('create a site', function(done) {
-      var siteName = suiteUtil.generateId(siteNamePrefix, siteNames);
+  it('create a site with github', function(done) {
+    var siteName = suite.generateId(siteNamePrefix, siteNames);
 
-      // Create site
-      var cmd = ('node cli.js site create ' + siteName + ' --json --location').split(' ');
-      cmd.push(location);
+    // Create site
+    var cmd = ('node cli.js site create ' + siteName + ' --github --json --location').split(' ');
+    cmd.push('East US');
+    cmd.push('--githubusername');
+    cmd.push(githubUsername);
+    cmd.push('--githubpassword');
+    cmd.push(githubPassword);
+    cmd.push('--githubrepository');
+    cmd.push(githubRepositoryFullName);
 
+    executeCmd(cmd, function (result) {
+      result.text.should.equal('');
+      result.exitStatus.should.equal(0);
+
+      // List sites
+      cmd = 'node cli.js site list --json'.split(' ');
       executeCmd(cmd, function (result) {
-        result.text.should.equal('');
-        result.errorText.should.equal('');
-        result.exitStatus.should.equal(0);
+        var siteList = JSON.parse(result.text);
 
-        // List sites
-        cmd = 'node cli.js site list --json'.split(' ');
-        executeCmd(cmd, function (result) {
-          var siteList = JSON.parse(result.text);
+        var siteExists = siteList.some(function (site) {
+          return site.Name.toLowerCase() === siteName.toLowerCase();
+        });
 
-          var siteExists = siteList.some(function (site) {
-            return site.Name.toLowerCase() === siteName.toLowerCase();
-          });
+        siteExists.should.be.ok;
 
-          siteExists.should.be.ok;
+        // verify that the hook is in github
+        githubClient.repos.getFromUser({ user: githubUsername }, function (err, repositories) {
+          var repository = LinkedRevisionControlClient._getRepository(repositories, githubRepositoryFullName);
 
-          // Delete created site
-          cmd = ('node cli.js site delete ' + siteName + ' --json --quiet').split(' ');
-          executeCmd(cmd, function (result) {
-            result.text.should.equal('');
-            result.exitStatus.should.equal(0);
+          githubClient.repos.getHooks({
+            user: githubUsername,
+            repo: repository.name
+          }, function (err, hooks) {
+            var hookExists = hooks.some(function (hook) {
+              var parsedUrl = url.parse(hook.config.url);
+              return parsedUrl.hostname === (siteName + '.scm.azurewebsites.net');
+            });
 
-            // List sites
-            cmd = 'node cli.js site list --json'.split(' ');
+            hookExists.should.be.ok;
+
+            // Delete created site
+            cmd = ('node cli.js site delete ' + siteName + ' --json --quiet').split(' ');
             executeCmd(cmd, function (result) {
-              if (result.text !== '') {
-                siteList = JSON.parse(result.text);
+              result.text.should.equal('');
+              result.exitStatus.should.equal(0);
 
-                siteExists = siteList.some(function (site) {
-                  return site.Name.toLowerCase() === siteName.toLowerCase();
-                });
+              // List sites
+              cmd = 'node cli.js site list --json'.split(' ');
+              executeCmd(cmd, function (result) {
+                if (result.text !== '') {
+                  siteList = JSON.parse(result.text);
 
-                siteExists.should.not.be.ok;
-              }
+                  siteExists = siteList.some(function (site) {
+                    return site.Name.toLowerCase() === siteName.toLowerCase();
+                  });
 
-              done();
+                  siteExists.should.not.be.ok;
+                }
+
+                done();
+              });
             });
           });
         });
       });
     });
+  });
 
-    it('create a site with github', function(done) {
-      var siteName = suiteUtil.generateId(siteNamePrefix, siteNames);
+  it('create a site with github rerun scenario', function(done) {
+    var siteName = suite.generateId(siteNamePrefix, siteNames);
 
-      // Create site
-      var cmd = ('node cli.js site create ' + siteName + ' --github --json --location').split(' ');
-      cmd.push('East US');
+    // Create site
+    var cmd = ('node cli.js site create ' + siteName + ' --json --location').split(' ');
+    cmd.push(location);
+
+    executeCmd(cmd, function (result) {
+      result.text.should.equal('');
+      result.exitStatus.should.equal(0);
+
+      cmd.push('--github');
       cmd.push('--githubusername');
       cmd.push(githubUsername);
       cmd.push('--githubpassword');
@@ -158,6 +218,7 @@ describe('cli', function(){
       cmd.push('--githubrepository');
       cmd.push(githubRepositoryFullName);
 
+      // Rerun to make sure update hook works properly
       executeCmd(cmd, function (result) {
         result.text.should.equal('');
         result.exitStatus.should.equal(0);
@@ -215,95 +276,40 @@ describe('cli', function(){
         });
       });
     });
+  });
 
-    it('create a site with github rerun scenario', function(done) {
-      var siteName = suiteUtil.generateId(siteNamePrefix, siteNames);
+  it('restarts a running site', function (done) {
+    var siteName = suite.generateId(siteNamePrefix, siteNames);
 
-      // Create site
-      var cmd = ('node cli.js site create ' + siteName + ' --json --location').split(' ');
-      cmd.push(location);
+    // Create site for testing
+    var cmd = util.format('node cli.js site create %s --json --location', siteName).split(' ');
+    cmd.push(location);
+    executeCmd(cmd, function (result) {
 
+      // Restart site, it's created running
+      cmd = util.format('node cli.js site restart %s', siteName).split(' ');
       executeCmd(cmd, function (result) {
-        result.text.should.equal('');
-        result.exitStatus.should.equal(0);
 
-        cmd.push('--github');
-        cmd.push('--githubusername');
-        cmd.push(githubUsername);
-        cmd.push('--githubpassword');
-        cmd.push(githubPassword);
-        cmd.push('--githubrepository');
-        cmd.push(githubRepositoryFullName);
-
-        // Rerun to make sure update hook works properly
+        // Delete test site
+        cmd = util.format('node cli.js site delete %s --quiet', siteName).split(' ');
         executeCmd(cmd, function (result) {
-          result.text.should.equal('');
-          result.exitStatus.should.equal(0);
-
-          // List sites
-          cmd = 'node cli.js site list --json'.split(' ');
-          executeCmd(cmd, function (result) {
-            var siteList = JSON.parse(result.text);
-
-            var siteExists = siteList.some(function (site) {
-              return site.Name.toLowerCase() === siteName.toLowerCase();
-            });
-
-            siteExists.should.be.ok;
-
-            // verify that the hook is in github
-            githubClient.repos.getFromUser({ user: githubUsername }, function (err, repositories) {
-              var repository = LinkedRevisionControlClient._getRepository(repositories, githubRepositoryFullName);
-
-              githubClient.repos.getHooks({
-                user: githubUsername,
-                repo: repository.name
-              }, function (err, hooks) {
-                var hookExists = hooks.some(function (hook) {
-                  var parsedUrl = url.parse(hook.config.url);
-                  return parsedUrl.hostname === (siteName + '.scm.azurewebsites.net');
-                });
-
-                hookExists.should.be.ok;
-
-                // Delete created site
-                cmd = ('node cli.js site delete ' + siteName + ' --json --quiet').split(' ');
-                executeCmd(cmd, function (result) {
-                  result.text.should.equal('');
-                  result.exitStatus.should.equal(0);
-
-                  // List sites
-                  cmd = 'node cli.js site list --json'.split(' ');
-                  executeCmd(cmd, function (result) {
-                    if (result.text !== '') {
-                      siteList = JSON.parse(result.text);
-
-                      siteExists = siteList.some(function (site) {
-                        return site.Name.toLowerCase() === siteName.toLowerCase();
-                      });
-
-                      siteExists.should.not.be.ok;
-                    }
-
-                    done();
-                  });
-                });
-              });
-            });
-          });
+          done();
         });
       });
     });
+  });
 
-    it('restarts a running site', function (done) {
-      var siteName = suiteUtil.generateId(siteNamePrefix, siteNames);
+  it('restarts a stopped site', function (done) {
+    var siteName = suite.generateId(siteNamePrefix, siteNames);
 
-      // Create site for testing
-      var cmd = util.format('node cli.js site create %s --json --location', siteName).split(' ');
-      cmd.push(location);
+    // Create site for testing
+    var cmd = util.format('node cli.js site create %s --json --location', siteName).split(' ');
+    cmd.push(location);
+    executeCmd(cmd, function (result) {
+      // Stop the site
+      cmd = util.format('node cli.js site stop %s', siteName).split(' ');
       executeCmd(cmd, function (result) {
-
-        // Restart site, it's created running
+        // Restart site
         cmd = util.format('node cli.js site restart %s', siteName).split(' ');
         executeCmd(cmd, function (result) {
 
@@ -315,73 +321,49 @@ describe('cli', function(){
         });
       });
     });
+  });
 
-    it('restarts a stopped site', function (done) {
-      var siteName = suiteUtil.generateId(siteNamePrefix, siteNames);
+  describe('set', function () {
+    var siteName;
 
-      // Create site for testing
+    beforeEach(function (done) {
+      siteName = suite.generateId(siteNamePrefix, siteNames);
+
       var cmd = util.format('node cli.js site create %s --json --location', siteName).split(' ');
       cmd.push(location);
-      executeCmd(cmd, function (result) {
-        // Stop the site
-        cmd = util.format('node cli.js site stop %s', siteName).split(' ');
-        executeCmd(cmd, function (result) {
-          // Restart site
-          cmd = util.format('node cli.js site restart %s', siteName).split(' ');
-          executeCmd(cmd, function (result) {
-
-            // Delete test site
-            cmd = util.format('node cli.js site delete %s --quiet', siteName).split(' ');
-            executeCmd(cmd, function (result) {
-              done();
-            });
-          });
-        });
+      executeCmd(cmd, function () {
+        done();
       });
     });
 
-    describe('set', function () {
-      var siteName;
+    it('sets all properties', function (done) {
+      var cmd = util.format('node cli.js site set --net-version 3.5 --php-version 5.3 %s --json', siteName).split(' ');
+      executeCmd(cmd, function (result) {
+        result.text.should.equal('');
+        result.exitStatus.should.equal(0);
 
-      beforeEach(function (done) {
-        siteName = suiteUtil.generateId(siteNamePrefix, siteNames);
-
-        var cmd = util.format('node cli.js site create %s --json --location', siteName).split(' ');
-        cmd.push(location);
-        executeCmd(cmd, function () {
-          done();
-        });
-      });
-
-      it('sets all properties', function (done) {
-        var cmd = util.format('node cli.js site set --net-version 3.5 --php-version 5.3 %s --json', siteName).split(' ');
+        var cmd = util.format('node cli.js site show %s --json', siteName).split(' ');
         executeCmd(cmd, function (result) {
-          result.text.should.equal('');
           result.exitStatus.should.equal(0);
 
-          var cmd = util.format('node cli.js site show %s --json', siteName).split(' ');
+          var site = JSON.parse(result.text);
+          site.config.NetFrameworkVersion.should.equal('v2.0');
+          site.config.PhpVersion.should.equal('5.3');
+
+          var cmd = util.format('node cli.js site set --net-version 3.5 --php-version off %s --json', siteName).split(' ');
           executeCmd(cmd, function (result) {
+            result.text.should.equal('');
             result.exitStatus.should.equal(0);
 
-            var site = JSON.parse(result.text);
-            site.config.NetFrameworkVersion.should.equal('v2.0');
-            site.config.PhpVersion.should.equal('5.3');
-
-            var cmd = util.format('node cli.js site set --net-version 3.5 --php-version off %s --json', siteName).split(' ');
+            var cmd = util.format('node cli.js site show %s --json', siteName).split(' ');
             executeCmd(cmd, function (result) {
-              result.text.should.equal('');
               result.exitStatus.should.equal(0);
 
-              var cmd = util.format('node cli.js site show %s --json', siteName).split(' ');
-              executeCmd(cmd, function (result) {
-                result.exitStatus.should.equal(0);
+              var site = JSON.parse(result.text);
+              site.config.NetFrameworkVersion.should.equal('v2.0');
+              site.config.PhpVersion.should.equal('');
 
-                var site = JSON.parse(result.text);
-                site.config.NetFrameworkVersion.should.equal('v2.0');
-                site.config.PhpVersion.should.equal('');
-
-                done();
-              });
+              done();
             });
           });
         });

@@ -19,7 +19,7 @@ var util = require('util');
 var CLITest = require('../framework/cli-test');
 
 var suite;
-var testPrefix = 'cli.site.handler-tests';
+var testPrefix = 'site.handler-tests';
 
 var createdSites = [];
 var siteNamePrefix = 'cli';
@@ -27,73 +27,71 @@ var siteNames = [];
 
 var location = process.env.AZURE_SITE_TEST_LOCATION || 'East US';
 
-describe('cli', function(){
-  describe('site handler', function() {
+describe('site handler', function() {
 
-    before(function (done) {
-      suite = new CLITest(testPrefix);
-      suite.setupSuite(done);
-    });
+  before(function (done) {
+    suite = new CLITest(testPrefix);
+    suite.setupSuite(done);
+  });
 
-    after(function (done) {
-      suite.teardownSuite(done);
-    });
+  after(function (done) {
+    suite.teardownSuite(done);
+  });
 
-    beforeEach(function (done) {
-      suite.setupTest(done);
-    });
+  beforeEach(function (done) {
+    suite.setupTest(done);
+  });
 
-    afterEach(function (done) {
-      function removeSite() {
-        if (createdSites.length === 0) {
-          return suite.teardownTest(done);
-        }
-
-        var siteName = createdSites.pop();
-        suite.execute(util.format('site delete %s --json --quiet', siteName), function () {
-          removeSite();
-        });
+  afterEach(function (done) {
+    function removeSite() {
+      if (createdSites.length === 0) {
+        return suite.teardownTest(done);
       }
 
-      removeSite();
-    });
+      var siteName = createdSites.pop();
+      suite.execute(util.format('site delete %s --json --quiet', siteName), function () {
+        removeSite();
+      });
+    }
 
-    it('should list, add and delete site handler', function(done) {
-      var siteName = suite.generateId(siteNamePrefix, siteNames);
-      var extension = '.js';
+    removeSite();
+  });
 
-      // Create site
-      suite.execute(util.format('site create %s --json --location "%s"', siteName, location), function (result) {
-        result.text.should.equal('');
+  it('should list, add and delete site handler', function(done) {
+    var siteName = suite.generateId(siteNamePrefix, siteNames);
+    var extension = '.js';
+
+    // Create site
+    suite.execute(util.format('site create %s --json --location "%s"', siteName, location), function (result) {
+      result.text.should.equal('');
+      result.exitStatus.should.equal(0);
+
+      suite.execute(util.format('site handler list %s --json', siteName), function (result) {
         result.exitStatus.should.equal(0);
 
-        suite.execute(util.format('site handler list %s --json', siteName), function (result) {
+        suite.execute(util.format('site handler add %s c: %s --json', extension, siteName), function (result) {
+          result.text.should.equal('');
           result.exitStatus.should.equal(0);
 
-          suite.execute(util.format('site handler add %s c: %s --json', extension, siteName), function (result) {
-            result.text.should.equal('');
-            result.exitStatus.should.equal(0);
+          suite.execute(util.format('site handler list %s --json', siteName), function (result) {
+            var handlers = JSON.parse(result.text);
 
-            suite.execute(util.format('site handler list %s --json', siteName), function (result) {
-              var handlers = JSON.parse(result.text);
+            should.exist(handlers.filter(function (d) {
+              return d.Extension === extension;
+            })[0]);
 
-              should.exist(handlers.filter(function (d) {
-                return d.Extension === extension;
-              })[0]);
+            suite.execute(util.format('node cli.js site handler delete %s %s --quiet --json', extension, siteName), function (result) {
+              result.text.should.equal('');
+              result.exitStatus.should.equal(0);
 
-              suite.execute(util.format('node cli.js site handler delete %s %s --quiet --json', extension, siteName), function (result) {
-                result.text.should.equal('');
-                result.exitStatus.should.equal(0);
+              suite.execute(util.format('node cli.js site handler list %s --json', siteName), function (result) {
+                handlers = JSON.parse(result.text);
 
-                suite.execute(util.format('node cli.js site handler list %s --json', siteName), function (result) {
-                  handlers = JSON.parse(result.text);
+                should.not.exist(handlers.filter(function (d) {
+                  return d.Extension === extension;
+                })[0]);
 
-                  should.not.exist(handlers.filter(function (d) {
-                    return d.Extension === extension;
-                  })[0]);
-
-                  done();
-                });
+                done();
               });
             });
           });
