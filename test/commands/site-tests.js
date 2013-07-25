@@ -131,7 +131,7 @@ describe('site', function() {
     var siteName = suite.generateId(siteNamePrefix, siteNames);
 
     // Create site
-    suite.execute('site create %s --github --json --location "%s" --githubusername %s --githubpassword %s --githubrepository %s',
+    suite.execute('site create %s --github --json --location %s --githubusername %s --githubpassword %s --githubrepository %s',
       siteName,
       'East US',
       githubUsername,
@@ -202,7 +202,7 @@ describe('site', function() {
       result.exitStatus.should.equal(0);
 
       // Rerun to make sure update hook works properly
-      suite.execute('site create %s --github --json --location "%s" --githubusername %s --githubpassword %s --githubrepository %s',
+      suite.execute('site create %s --github --json --location %s --githubusername %s --githubpassword %s --githubrepository %s',
         siteName,
         location,
         githubUsername,
@@ -290,7 +290,7 @@ describe('site', function() {
     var siteName = suite.generateId(siteNamePrefix, siteNames);
 
     // Create site for testing
-    suite.execute('site create %s --json --location "%s"', siteName, location, function (result) {
+    suite.execute('site create %s --json --location %s', siteName, location, function (result) {
       result.exitStatus.should.equal(0);
 
       // Stop the site

@@ -15,126 +15,114 @@
 
 var should = require('should');
 
-var executeCommand = require('../framework/cli-executor').execute;
-var MockedTestUtils = require('../framework/mocked-test-utils');
+var CLITest = require('../framework/cli-test');
 
 var gitUsername = process.env['AZURE_GIT_USERNAME'];
 
-var suiteUtil;
+var suite;
 var testPrefix = 'site.diagnostic-tests';
 
 var siteNamePrefix = 'clitests';
 var siteNames = [];
 
-var executeCmd = function (cmd, callback) {
-  if (suiteUtil.isMocked && !suiteUtil.isRecording) {
-    cmd.push('-s');
-    cmd.push(process.env.AZURE_SUBSCRIPTION_ID);
-  }
+describe('site log', function () {
+  var createdSites = [];
 
-  executeCommand(cmd, callback);
-};
+  before(function (done) {
+    suite = new CLITest(testPrefix);
+    suite.setupSuite(done);
+  });
 
-describe('cli', function () {
-  describe('site log', function () {
-    var createdSites = [];
+  after(function (done) {
+    suite.teardownSuite(done);
+  });
 
-    before(function (done) {
-      suiteUtil = new MockedTestUtils(testPrefix);
-      suiteUtil.setupSuite(done);
-    });
+  beforeEach(function (done) {
+    suite.setupTest(done);
+  });
 
-    after(function (done) {
-      suiteUtil.teardownSuite(done);
-    });
+  afterEach(function (done) {
+    var deleteSites = function () {
+      if (createdSites.length > 0) {
+        deleteSite(createdSites.pop(), deleteSites);
+      } else {
+        return suite.teardownTest(done);
+      }
+    };
+
+    deleteSites();
+  });
+
+  describe('config', function () {
+    var siteName;
 
     beforeEach(function (done) {
-      suiteUtil.setupTest(done);
+      siteName = suite.generateId(siteNamePrefix, siteNames);
+
+      createSite(siteName, function () {
+        done();
+      });
     });
 
-    afterEach(function (done) {
-      var deleteSites = function () {
-        if (createdSites.length > 0) {
-          deleteSite(createdSites.pop(), deleteSites);
-        } else {
-          return suiteUtil.teardownTest(done);
-        }
-      };
+    it('should allow setting everything', function (done) {
+      suite.execute('site log set %s --application -o file -l error --web-server-logging --detailed-error-messages --failed-request-tracing --json',
+        siteName,
+        function (result) {
 
-      deleteSites();
-    });
+        result.text.should.equal('');
+        result.exitStatus.should.equal(0);
 
-    describe('config', function () {
-      var siteName;
+        showSite(siteName, function (result) {
+          result.exitStatus.should.equal(0);
 
-      beforeEach(function (done) {
-        siteName = suiteUtil.generateId(siteNamePrefix, siteNames);
+          var site = JSON.parse(result.text);
 
-        createSite(siteName, function () {
+          site.diagnosticsSettings.AzureDriveEnabled.should.equal(true);
+          site.diagnosticsSettings.AzureDriveTraceLevel.should.equal('error');
+
+          site.config.RequestTracingEnabled.should.equal('true');
+          site.config.HttpLoggingEnabled.should.equal('true');
+          site.config.DetailedErrorLoggingEnabled.should.equal('true');
+
           done();
         });
       });
+    });
 
-      it('should allow setting everything', function (done) {
-        var cmd = ('node cli.js site log set ' + siteName + ' --application -o file -l error --web-server-logging --detailed-error-messages --failed-request-tracing --json').split(' ');
-        executeCmd(cmd, function (result) {
-          result.text.should.equal('');
+    it('should allow disabling everything', function (done) {
+      suite.execute('site log set %s --disable-application -o file --disable-web-server-logging --disable-detailed-error-messages --disable-failed-request-tracing --json',
+        siteName,
+        function (result) {
+
+        result.text.should.equal('');
+        result.exitStatus.should.equal(0);
+
+        showSite(siteName, function (result) {
           result.exitStatus.should.equal(0);
 
-          showSite(siteName, function (result) {
-            result.exitStatus.should.equal(0);
+          var site = JSON.parse(result.text);
 
-            var site = JSON.parse(result.text);
+          site.diagnosticsSettings.AzureDriveEnabled.should.equal(false);
 
-            site.diagnosticsSettings.AzureDriveEnabled.should.equal(true);
-            site.diagnosticsSettings.AzureDriveTraceLevel.should.equal('error');
+          site.config.RequestTracingEnabled.should.equal('false');
+          site.config.HttpLoggingEnabled.should.equal('false');
+          site.config.DetailedErrorLoggingEnabled.should.equal('false');
 
-            site.config.RequestTracingEnabled.should.equal('true');
-            site.config.HttpLoggingEnabled.should.equal('true');
-            site.config.DetailedErrorLoggingEnabled.should.equal('true');
-
-            done();
-          });
-        });
-      });
-
-      it('should allow disabling everything', function (done) {
-        var cmd = ('node cli.js site log set ' + siteName + ' --disable-application -o file --disable-web-server-logging --disable-detailed-error-messages --disable-failed-request-tracing --json').split(' ');
-        executeCmd(cmd, function (result) {
-          result.text.should.equal('');
-          result.exitStatus.should.equal(0);
-
-          showSite(siteName, function (result) {
-            result.exitStatus.should.equal(0);
-
-            var site = JSON.parse(result.text);
-
-            site.diagnosticsSettings.AzureDriveEnabled.should.equal(false);
-
-            site.config.RequestTracingEnabled.should.equal('false');
-            site.config.HttpLoggingEnabled.should.equal('false');
-            site.config.DetailedErrorLoggingEnabled.should.equal('false');
-
-            done();
-          });
+          done();
         });
       });
     });
-
-    function createSite(siteName, callback) {
-      var cmd = ('node cli.js site create ' + siteName + ' --git --gitusername ' + gitUsername + ' --json --location').split(' ');
-      cmd.push('East US');
-      executeCmd(cmd, callback);
-    }
-
-    function showSite(siteName, callback) {
-      var cmd = ('node cli.js site show ' + siteName + ' --json').split(' ');
-      executeCmd(cmd, callback);
-    }
-
-    function deleteSite(siteName, callback) {
-      var cmd = ('node cli.js site delete ' + siteName + ' --json --quiet').split(' ');
-      executeCmd(cmd, callback);
-    }
   });
+
+  function createSite(siteName, callback) {
+    suite.execute('node cli.js site create %s --git --gitusername %s --json --location %s', siteName, gitUsername, 'East US', callback);
+  }
+
+  function showSite(siteName, callback) {
+    suite.execute('node cli.js site show %s --json', siteName, callback);
+  }
+
+  function deleteSite(siteName, callback) {
+    suite.execute('node cli.js site delete %s --json --quiet', siteName, callback);
+  }
 });

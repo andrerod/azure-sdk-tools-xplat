@@ -8,10 +8,10 @@ commands/mobilerecover-tests.js
 commands/sb-tests.js
 commands/site-tests.js
 commands/site.appsetting-tests.js
-# commands/site.connectionstring-tests.js
+commands/site.connectionstring-tests.js
 commands/site.deployment-tests.js
-# commands/site.deploymentscript-tests.js
-# commands/site.diagnostic-tests.js
+commands/site.deploymentscript-tests.js
+commands/site.diagnostic-tests.js
 # commands/site.domain-tests.js
 commands/site.handler-tests.js
 # commands/site.scale-tests.js
@@ -27,4 +27,4 @@ commands/site.handler-tests.js
 # hdinsight/unit-delete-command.js
 # hdinsight/unit-create-command.js
 # hdinsight/unit-config-commands.js
-# commands/cli.site.log-tests.js
+commands/cli.site.log-tests.js

@@ -14,7 +14,6 @@
 */
 
 var should = require('should');
-var util = require('util');
 
 var CLITest = require('../framework/cli-test');
 
@@ -49,7 +48,7 @@ describe('site handler', function() {
       }
 
       var siteName = createdSites.pop();
-      suite.execute(util.format('site delete %s --json --quiet', siteName), function () {
+      suite.execute('site delete %s --json --quiet', siteName, function () {
         removeSite();
       });
     }
@@ -62,29 +61,29 @@ describe('site handler', function() {
     var extension = '.js';
 
     // Create site
-    suite.execute(util.format('site create %s --json --location "%s"', siteName, location), function (result) {
+    suite.execute('site create %s --json --location %s', siteName, location, function (result) {
       result.text.should.equal('');
       result.exitStatus.should.equal(0);
 
-      suite.execute(util.format('site handler list %s --json', siteName), function (result) {
+      suite.execute('site handler list %s --json', siteName, function (result) {
         result.exitStatus.should.equal(0);
 
-        suite.execute(util.format('site handler add %s c: %s --json', extension, siteName), function (result) {
+        suite.execute('site handler add %s c: %s --json', extension, siteName, function (result) {
           result.text.should.equal('');
           result.exitStatus.should.equal(0);
 
-          suite.execute(util.format('site handler list %s --json', siteName), function (result) {
+          suite.execute('site handler list %s --json', siteName, function (result) {
             var handlers = JSON.parse(result.text);
 
             should.exist(handlers.filter(function (d) {
               return d.Extension === extension;
             })[0]);
 
-            suite.execute(util.format('node cli.js site handler delete %s %s --quiet --json', extension, siteName), function (result) {
+            suite.execute('node cli.js site handler delete %s %s --quiet --json', extension, siteName, function (result) {
               result.text.should.equal('');
               result.exitStatus.should.equal(0);
 
-              suite.execute(util.format('node cli.js site handler list %s --json', siteName), function (result) {
+              suite.execute('node cli.js site handler list %s --json', siteName, function (result) {
                 handlers = JSON.parse(result.text);
 
                 should.not.exist(handlers.filter(function (d) {

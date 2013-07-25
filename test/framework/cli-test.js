@@ -125,12 +125,26 @@ _.extend(CLITest.prototype, {
     }
   },
 
-  execute: function (cmd, callback) {
+  execute: function (cmd) {
+    if (!_.isString(cmd) && !_.isArray(cmd)) {
+      throw new Error('First argument needs to be a string or array with the command to execute');
+    }
+
+    var args = Array.prototype.slice.call(arguments);
+
+    if (args.length < 2 || !_.isFunction(args[args.length - 1])) {
+      throw new Error('Callback needs to be passed as last argument');
+    }
+
+    var callback = args[args.length - 1];
+
     if (_.isString(cmd)) {
-      cmd = cmd.match(/([^\s]*\"[^\"]+\"[^\s]*)|[-.:\/!$A-Za-z0-9_]+/g);
+      cmd = cmd.split(' ');
+
+      var rep = 1;
       for (var i = 0; i < cmd.length; i++) {
-        if (cmd[i][0] === '"' && cmd[i][cmd[i].length - 1] === '"') {
-          cmd[i] = cmd[i].substring(1, cmd[i].length - 1);
+        if (cmd[i] === '%s') {
+          cmd[i] = args[rep++];
         }
       }
     }

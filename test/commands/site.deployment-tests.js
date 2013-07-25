@@ -14,7 +14,6 @@
 */
 
 var should = require('should');
-var util = require('util');
 
 var GitHubApi = require('github');
 var url = require('url');
@@ -99,13 +98,13 @@ describe('site deployment', function() {
     var siteName = suite.generateId('cliuttestdeploy1', siteNames);
 
     // Create site
-    suite.execute(util.format('site create %s --json --location "%s"', siteName, location), function (result) {
+    suite.execute('site create %s --json --location %s', siteName, location, function (result) {
       result.text.should.equal('');
       result.errorText.should.equal('');
       result.exitStatus.should.equal(0);
 
       // List sites
-      suite.execute('node cli.js site list --json', function (result) {
+      suite.execute('site list --json', function (result) {
         var siteList = JSON.parse(result.text);
 
         var siteExists = siteList.some(function (site) {
@@ -115,11 +114,11 @@ describe('site deployment', function() {
         siteExists.should.be.ok;
 
         // Create the hook using deployment github cmdlet
-        suite.execute(util.format('node cli.js site deployment github %s --json --githubusername %s --githubpassword %s --githubrepository %s',
+        suite.execute('site deployment github %s --json --githubusername %s --githubpassword %s --githubrepository %s',
           siteName,
           githubUsername,
           githubPassword,
-          githubRepositoryFullName),
+          githubRepositoryFullName,
           function (result) {
 
           result.text.should.equal('');
@@ -142,13 +141,13 @@ describe('site deployment', function() {
               hookExists.should.be.ok;
 
               // Delete created site
-              suite.execute(util.format('node cli.js site delete %s --json --quiet', siteName), function (result) {
+              suite.execute('site delete %s --json --quiet', siteName, function (result) {
                 result.text.should.equal('');
                 result.errorText.should.equal('');
                 result.exitStatus.should.equal(0);
 
                 // List sites
-                suite.execute('node cli.js site list --json', function (result) {
+                suite.execute('site list --json', function (result) {
                   if (result.text != '') {
                     siteList = JSON.parse(result.text);
 
