@@ -3,8 +3,8 @@
   "version": "0.7.0",
   "dependencies": {
     "azure": {
-      "version": "0.7.14",
-      "from": "azure@0.7.14",
+      "version": "0.7.15 || 0.7.14",
+      "from": "azure@0.7.15 || 0.7.14",
       "dependencies": {
         "xml2js": {
           "version": "0.2.8",
