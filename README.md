@@ -429,7 +429,7 @@ Delete a scheduled job
 List all your Service Bus namespaces
 
     azure sb namespace create [namespace] [region]
-Create a new Service Bus namespace in the specified region
+Create a service bus namespace in the specified region
 
     azure sb namespace show [name]
 Display details about a namespace such as the connection string and endpoint information
@@ -500,7 +500,7 @@ Delete a rule
 ### azure sql db - Manage Azure SQL Databases
 
     azure sql db create [serverName] [databaseName] [administratorLogin] [administratorPassword] [options]
-Create a new database
+Create a database
 
 **--serverName** - Server to create the database on
 
