@@ -269,7 +269,7 @@ nock('https://management.core.windows.net:443')
 function (nock) { 
 var result = 
 nock('https://clitests1.scm.azurewebsites.net:443')
-  .get('/diagnostics/settings')
+  .get('/diagnostics/settings/')
   .reply(200, "{}", { 'cache-control': 'no-cache',
   pragma: 'no-cache',
   'content-length': '2',
@@ -375,7 +375,7 @@ nock('https://clitests1.scm.azurewebsites.net:443')
 function (nock) { 
 var result = 
 nock('https://clitests1.scm.azurewebsites.net:443')
-  .get('/diagnostics/settings')
+  .get('/diagnostics/settings/')
   .reply(200, "{\"AzureDriveEnabled\":true,\"AzureDriveTraceLevel\":\"error\"}", { 'cache-control': 'no-cache',
   pragma: 'no-cache',
   'content-length': '57',
@@ -644,7 +644,7 @@ nock('https://management.core.windows.net:443')
 function (nock) { 
 var result = 
 nock('https://clitests2.scm.azurewebsites.net:443')
-  .get('/diagnostics/settings')
+  .get('/diagnostics/settings/')
   .reply(200, "{}", { 'cache-control': 'no-cache',
   pragma: 'no-cache',
   'content-length': '2',
@@ -750,7 +750,7 @@ nock('https://clitests2.scm.azurewebsites.net:443')
 function (nock) { 
 var result = 
 nock('https://clitests2.scm.azurewebsites.net:443')
-  .get('/diagnostics/settings')
+  .get('/diagnostics/settings/')
   .reply(200, "{\"AzureDriveEnabled\":false}", { 'cache-control': 'no-cache',
   pragma: 'no-cache',
   'content-length': '27',
