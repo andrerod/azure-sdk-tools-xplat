@@ -35,6 +35,7 @@
     }
   ],
   "dependencies": {
+    "cspack": "git://github.com/andrerod/cspack.git",
     "azure" : "0.8.0",
     "xml2js": "0.1.x",
     "xmlbuilder": "0.4.x",
