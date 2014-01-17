@@ -1,3 +1,77 @@
+2014.01.20 - version 0.7.5
+* Added web site slots support
+* Multiple bugfixes
+
+2013.11.13 - version 0.7.4
+* azure site set --web-socket --disable-web-socket to enable/disable WebSocket
+* azure site set --remote-debugging --disable-remote-debugging --remote-debugging-version to enable/disable/set remote debugging for .NET application.
+* azure site set --managed-pipeline-mode to choose between Classic and Integrated.
+* Multiple bugfixes
+
+2013.10.18 - version 0.7.3
+* #961 - Fixed issue with site connection strings
+* #712 - Add support for VM shutdown on stop
+* #876 - Improve azure site show appearance
+* #966 - Fixed issue with incorrect service endpoint being used from publish settings
+* #987 - Fix issue with "azure site download" on windows
+* #925 - Making "azure site create" show template based error instead of generic one
+* #963 - Update kudu script module to version 0.1.5
+* Upgrade to latest SDK (which uses generated website wrappers)
+* Supports the new high-memory A5 instance size (2 cores, 14GB RAM)
+
+2013.09.24 - version 0.7.2
+* Multiple bugfixes
+
+2013.08.26 - version 0.7.1
+* Added blob storage commands
+  * azure storage blob list
+  * azure storage blob show
+  * azure storage blob upload
+  * azure storage blob download
+  * azure storage blob delete
+* Added azure account cert export
+* Multiple bug fixes
+
+2013.07.31 - version 0.7.0
+* Added network commands
+* Added more site commands
+  * azure site set
+  * azure site cert
+  * azure site connectionstring
+  * azure site defaultdocument
+  * azure site domain
+  * azure site handler
+* Improved site list to show locations
+* Renamed azure site config (will be removed in a future version) to azure site appsettings
+* Renamed azure account storage (will be removed in a future version) to azure storage account
+* Reduced CLI generic help
+* Added bash auto-complete support for commands and categories
+* Fixed generic options (--json and --verbose) to only show up where they work
+* Improved and updated setup experience
+* Multiple bug fixes and test infrastructure improvement
+
+2013.07.15 - version 0.6.18
+* Added website diagnostics configuration command
+  * azure site log set
+* Added more storage container commands
+  * azure storage container show
+  * azure storage container create
+  * azure storage container set
+  * azure storage container delete
+* Multiple fixes
+* Made module global by default
+* Added scenario tests
+
+2013.06.20 - version 0.6.17
+* HDInsight commands
+* Added cucumber tests
+* Multiple fixes to support Azure China
+* Multiple VM fixes
+* New azure site repository sync command to sync the deployment of a website
+* New azure mobile recover command to recover of an unhealthy mobile service
+* Command to list Windows Azure Storage container
+  * azure storage container list
+
 2013.05.13 - version 0.6.16
 * Fixed issue with registered resources on account import.
 * Fixed jsHint errors.
@@ -96,4 +170,3 @@
 
 2011.12.09 Version 0.5.0
  * Initial Release
-

@@ -1,4 +1,6 @@
-# Windows Azure CLI tool for Windows, Mac and Linux [![Build Status](https://travis-ci.org/WindowsAzure/azure-sdk-tools-xplat.png?branch=dev)](https://travis-ci.org/WindowsAzure/azure-sdk-tools-xplat)
+# Windows Azure CLI tool for Windows, Mac and Linux
+
+[![NPM version](https://badge.fury.io/js/azure-cli.png)](http://badge.fury.io/js/azure-cli) [![Build Status](https://travis-ci.org/WindowsAzure/azure-sdk-tools-xplat.png?branch=master)](https://travis-ci.org/WindowsAzure/azure-sdk-tools-xplat)
 
 This project provides a cross platform command line tool for developers and administrators to develop, deploy and manage Windows Azure applications.
 
@@ -6,17 +8,28 @@ This project provides a cross platform command line tool for developers and admi
 
 * Accounts
     * Download and import Azure publish settings
+    * List imported Azure subscriptions
+    * Select current subscription
+    * Manage Azure environments
+    * Create and manage affinity groups
+    * Export management certificate
+* Storage
     * Create and manage Storage Accounts
+    * Create and manage container, blob and ACL
 * Websites
     * Create and manage Windows Azure websites
     * Download site log files and get real time log streaming
     * Manage Deployments
-    * Configure Github integration
+    * Configure GitHub integration
 * Virtual machines
     * Create and manage Windows and Linux Virtual machines
     * Create and manage VM endpoints
     * Create and manage Virtual Machine Images
     * Create and manage certificates
+* Network
+    * Import and export network configuration
+    * Create and manage virtual network
+    * Create and manage DNS server
 * Mobile Services
     * Create and manage Mobile Services
     * Manage tables, scripts, and configuration
@@ -41,6 +54,20 @@ To get the source code of the SDK via **git** just type:
 You can install the azure cli npm package directly. 
 
     npm install -g azure-cli
+
+## Autocomplete
+
+Autocomplete is supported in the azure CLI.
+
+To enable it in zsh, you can write:
+
+    echo '. <(azure --completion)' >> .zshrc
+
+To enable it in bash, you can write:
+
+    azure --completion >> ~/azure.completion.sh<br />
+
+    echo 'source ~/azure.completion.sh' >> .bash_profile
 
 # Using the cli
 
@@ -103,6 +130,25 @@ Lists out storage account keys for the specified account
 
     azure account storage keys renew [name]
 Renews storage account keys for the specified account
+
+## azure storage - Managing Windows Azure Storage
+
+You can list storage container
+
+    azure storage container list -a <account name> -k <access key>
+Lists all the containers in the storage account.
+
+    azure storage container show -a <account name> -k <access key> [container]
+Show the details for a specific container.
+
+    azure storage container create -a <account name> -k <access key> [container]
+Create a container
+    
+    azure storage container delete -a <account name> -k <access key> [container]
+Delete a container
+
+    azure storage container set -a <account name> -k <access key> -p <permission> [container]
+Set the ACL of a specific container
 
 ## azure site - Managing Windows Azure Websites
 
@@ -285,14 +331,14 @@ Deletes a mobile service
 ## azure mobile scale - Manage scale for your mobile service
 
     azure mobile scale show [servicename]
-Show the scalability settings of a mobile sservice
+Show the scalability settings of a mobile service
 
     azure mobile scale change [options] [servicename]
 Change the scalability settings of a mobile service
 
-**--computeMode [mode]** - 'Free' or 'Reserved'
+**--tier [tier]** - 'Free', 'Basic' or 'Standard'
 
-**--numberOfInstances [count]** - number of instances in reserved mode.
+**--numberOfInstances [count]** - number of instances in basic or standard mode.
 
     azure mobile log [servicename]
 Retrieves mobile logs 
@@ -318,7 +364,7 @@ List the tables for a specific service
     azure mobile table create [servicename] [tablename]
 Creates a new table for your mobile service
 
-**--permissions [permissions]** - comma delimited list of <operation>=<permission> pairs
+**--permissions [permissions]** - comma delimited list of &lt;operation&gt;=&lt;permission&gt; pairs
 
     azure mobile table show [servicename] [tablename]
 Display table details such as the number of records, the list of columns and which scripts are defined.
@@ -326,7 +372,7 @@ Display table details such as the number of records, the list of columns and whi
     azure mobile table update [options] [servicename] [tablename] 
 Updates mobile table schema, permissions and indexes
 
-**--permissions [permissions]** - comma delimited list of <operation>=<permission> pairs
+**--permissions [permissions]** - comma delimited list of &lt;operation&gt;=&lt;permission&gt; pairs
 
 **--deleteColumn [columns]** - comma delimited list of columns to delete
 
@@ -385,6 +431,24 @@ Update job settings
 
     azure mobile job delete [servicename] [jobname]
 Delete a scheduled job
+
+### azure mobile api - Manage custom APIs
+
+    azure mobile api list [servicename]
+List custom APIs
+
+    azure mobile api create [servicename] [apiname]
+Create a new custom API
+
+**--permissions [permissions]** - comma delimited list of &lt;method&gt;=&lt;permission&gt; pairs
+
+    azure mobile api update [servicename] [apiname]
+Update a custom API
+
+**--permissions [permissions]** - comma delimited list of &lt;method&gt;=&lt;permission&gt; pairs
+
+    azure mobile api delete [servicename] [apiname]
+Delete a custom API
 
 ## azure sb - Manage your Service Bus configuration
 

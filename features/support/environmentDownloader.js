@@ -1,21 +1,22 @@
-/**
-* Copyright (c) Microsoft.  All rights reserved.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*   http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+// 
+// Copyright (c) Microsoft and contributors.  All rights reserved.
+// 
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//   http://www.apache.org/licenses/LICENSE-2.0
+// 
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// 
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// 
 
 'use strict';
 
-var _ = require('underscore')
+var _ = require('underscore');
 var azure = require('azure');
 var xml2js = require('xml2js');
 
@@ -39,11 +40,23 @@ function ensureEnvironment() {
 }
 
 function EnvironmentDownloader(tempPath) {
-  if (!fs.existsSync(tempPath) || !fs.statSync(tempPath).isDirectory()) {
-    throw new Error(tempPath + ' does not exist or is not a directory');
+  function getTempPath(current) {
+    if (!fs.existsSync(current) || !fs.statSync(current).isDirectory()) {
+      // try in upper directories
+      if (!path.dirname(current)) {
+        throw new Error(tempPath + ' does not exist or is not a directory');
+      }
+
+      return getTempPath(path.join(path.dirname(path.dirname(current)), path.basename(current)));
+    }
+
+    return current;
   }
+
+  tempPath = getTempPath(path.resolve(tempPath));
+
   ensureEnvironment();
-  this.path = path.resolve(tempPath);
+  this.path = tempPath;
   this.blobService = azure.createBlobService(process.env.AZURE_STORAGE_ACCOUNT, process.env.AZURE_STORAGE_ACCESS_KEY);
   this.blobContainer = 'testcredentials-' + process.env.AZURE_TEST_ENVIRONMENT;
 }
@@ -61,6 +74,14 @@ function parsePublishSettings(fileName, callback) {
       result.PublishData.PublishProfile.forEach(function (profile) {
         var endpoint = profile.$.Url;
         profile.Subscription.forEach(function (subscription) {
+          if (!endpoint) {
+            endpoint = subscription.$.ServiceManagementUrl;
+          }
+
+          if (endpoint[endpoint.length - 1] !== '/') {
+            endpoint += '/';
+          }
+
           results.push({
             endpoint: endpoint,
             subscriptionId: subscription.$.Id,
@@ -75,12 +96,12 @@ function parsePublishSettings(fileName, callback) {
 }
 
 function fullSettingsFilePath(settingsName) {
-  return path.resolve(this.path, settingsName + '.publishsettings');
+  return path.resolve(this.path, settingsName + '.publishSettings');
 }
 
 function downloadPublishSettings(settingsName, callback) {
   var self = this;
-  var blobName = settingsName + '.publishsettings';
+  var blobName = settingsName + '.publishSettings';
   var destPath = self._fullSettingsFilePath(settingsName);
   self.blobService.getBlobToFile(self.blobContainer, blobName, destPath, function (err) {
     if (err) { return callback(err); }
@@ -95,7 +116,7 @@ function getPublishSettingsFromCache(settingsName, callback) {
 }
 
 function getPublishSettings(settingsName, callback) {
-  settingsName = settingsName.replace(/[ -.]/, '');
+  settingsName = settingsName.replace(/[ -.]/g, '');
   if (fs.existsSync(this._fullSettingsFilePath(settingsName))) {
     this._getPublishSettingsFromCache(settingsName, callback);
   } else {

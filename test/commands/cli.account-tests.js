@@ -1,30 +1,51 @@
-/**
-* Copyright 2012 Microsoft Corporation
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*   http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+// 
+// Copyright (c) Microsoft and contributors.  All rights reserved.
+// 
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//   http://www.apache.org/licenses/LICENSE-2.0
+// 
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// 
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// 
 
-require('should');
+var should = require('should');
 var sinon = require('sinon');
 var fs = require('fs');
 
 var keyFiles = require('../../lib/util/keyFiles');
 var utils = require('../../lib/util/utils');
-var executeCmd = require('../framework/cli-executor').execute;
 
-var testFile = './test/data/account-credentials.publishsettings';
+var CLITest = require('../framework/cli-test');
+var suite = new CLITest();
 
-describe('cli', function(){
+var testFile = './test/data/account-credentials.publishSettings';
+
+describe('cli', function () {
   describe('account', function() {
+    describe('env', function () {
+      describe('list', function () {
+        it('should work', function (done) {
+          suite.execute('account env list --json', function (result) {
+            result.exitStatus.should.equal(0);
+            var environments = JSON.parse(result.text);
+
+            environments.AzureCloud.should.not.equal(null);
+            environments.AzureChinaCloud.should.not.equal(null);
+            environments.AzureCloud.should.not.equal(null);
+            environments.AzureChinaCloud.publishingProfile.should.not.equal(null);
+
+            done();
+          });
+        });
+      });
+    });
+
     describe('import', function() {
       beforeEach(function (done) {
         var currentCertificate = process.env.AZURE_CERTIFICATE;
@@ -124,8 +145,14 @@ describe('cli', function(){
       });
 
       it('should import certificate', function(done) {
-        var cmd = ('node cli.js account import ' + testFile + ' --skipregister').split(' ');
-        executeCmd(cmd, function (result) {
+        suite.execute('account import %s --skipregister', testFile, function (result) {
+          result.exitStatus.should.equal(0);
+          done();
+        });
+      });
+
+      it('should work accounts', function (done) {
+        suite.execute('account clear', function (result) {
           result.exitStatus.should.equal(0);
           done();
         });

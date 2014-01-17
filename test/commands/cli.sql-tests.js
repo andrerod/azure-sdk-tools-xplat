@@ -1,76 +1,64 @@
-/**
-* Copyright 2012 Microsoft Corporation
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*   http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+// 
+// Copyright (c) Microsoft and contributors.  All rights reserved.
+// 
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//   http://www.apache.org/licenses/LICENSE-2.0
+// 
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// 
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// 
 
 var _ = require('underscore');
 
 var should = require('should');
-var mocha = require('mocha');
 
-var util = require('util');
-var executeCommand = require('../framework/cli-executor').execute;
-var MockedTestUtils = require('../framework/mocked-test-utils');
+var CLITest = require('../framework/cli-test');
 
-var suiteUtil;
+var suite;
 var testPrefix = 'cli.sql-tests';
 
 var location = process.env.AZURE_SQL_TEST_LOCATION || 'West US';
 
-var executeCmd = function (cmd, callback) {
-  if (suiteUtil.isMocked && !suiteUtil.isRecording) {
-    cmd.push('-s');
-    cmd.push(process.env.AZURE_SUBSCRIPTION_ID);
-  }
-
-  executeCommand(cmd, callback);
-};
-
-describe('CLI', function () {
-  describe('SQL', function () {
+describe('cli', function () {
+  describe('sql', function () {
     var administratorLogin = 'azuresdk';
     var administratorLoginPassword = 'SQLR0cks!999';
 
     before(function (done) {
       if (process.env.AZURE_TEST_MC) {
-        suiteUtil = new MockedTestUtils(testPrefix);
+        suite = new CLITest(testPrefix);
       } else {
-        suiteUtil = new MockedTestUtils(testPrefix, true);
+        suite = new CLITest(testPrefix, true);
       }
 
-      suiteUtil.setupSuite(done);
+      suite.setupSuite(done);
     });
 
     after(function (done) {
-      suiteUtil.teardownSuite(done);
+      suite.teardownSuite(done);
     });
 
     beforeEach(function (done) {
-      suiteUtil.setupTest(done);
+      suite.setupTest(done);
     });
 
     afterEach(function (done) {
-      suiteUtil.teardownTest(done);
+      suite.teardownTest(done);
     });
 
     describe('server cmdlets', function () {
       var oldServerNames;
 
       beforeEach(function (done) {
-        var cmd = ('node cli.js sql server list --json').split(' ');
-        executeCmd(cmd, function (result) {
+        suite.execute('sql server list --json', function (result) {
           oldServerNames = JSON.parse(result.text).map(function (server) {
-            return server.Name;
+            return server.name;
           });
 
           done();
@@ -82,8 +70,7 @@ describe('CLI', function () {
           if (serverNames.length > 0) {
             var serverName = serverNames.pop();
 
-            var cmd = ('node cli.js sql server delete ' + serverName + ' --json').split(' ');
-            executeCmd(cmd, function () {
+            suite.execute('sql server delete %s --quiet --json', serverName, function () {
               deleteUsedServers(serverNames);
             });
           } else {
@@ -91,14 +78,13 @@ describe('CLI', function () {
           }
         }
 
-        var cmd = ('node cli.js sql server list --json').split(' ');
-        executeCmd(cmd, function (result) {
+        suite.execute('sql server list --json', function (result) {
           var servers = JSON.parse(result.text);
 
           var usedServers = [ ];
           _.each(servers, function (server) {
             if (!_.contains(oldServerNames, server.Name)) {
-              usedServers.push(server.Name);
+              usedServers.push(server.name);
             }
           });
 
@@ -108,20 +94,16 @@ describe('CLI', function () {
 
       describe('Create SQL Server', function () {
         it('should create a server', function (done) {
-          var cmd = ('node cli.js sql server create').split(' ');
-          cmd.push('--administratorLogin');
-          cmd.push(administratorLogin);
-          cmd.push('--administratorPassword');
-          cmd.push(administratorLoginPassword);
-          cmd.push('--location');
-          cmd.push(location);
-          cmd.push('--json');
+          suite.execute('sql server create --administratorLogin %s --administratorPassword %s --location %s --json',
+            administratorLogin,
+            administratorLoginPassword,
+            location,
+            function (result) {
 
-          executeCmd(cmd, function (result) {
             result.text.should.not.be.null;
             result.exitStatus.should.equal(0);
 
-            var serverName = JSON.parse(result.text).Name;
+            var serverName = JSON.parse(result.text).name;
             serverName.should.not.be.null;
             serverName.should.match(/[0-9a-zA-Z]*/);
 
@@ -132,29 +114,20 @@ describe('CLI', function () {
 
       describe('Create SQL Server with azure firewall rule', function () {
         it('should create a server with firewall rule', function (done) {
-          var cmd = ('node cli.js sql server create').split(' ');
-          cmd.push('--administratorLogin');
-          cmd.push(administratorLogin);
-          cmd.push('--administratorPassword');
-          cmd.push(administratorLoginPassword);
-          cmd.push('--location');
-          cmd.push(location);
-          cmd.push('--defaultFirewallRule');
-          cmd.push('--json');
-
-          executeCmd(cmd, function (result) {
+          suite.execute('sql server create --administratorLogin %s --administratorPassword %s --location %s --defaultFirewallRule --json',
+            administratorLogin,
+            administratorLoginPassword,
+            location,
+            function (result) {
             try {
               result.text.should.not.be.null;
               result.exitStatus.should.equal(0);
 
-              var serverName = JSON.parse(result.text).Name;
+              var serverName = JSON.parse(result.text).name;
               serverName.should.not.be.null;
               serverName.should.match(/[0-9a-zA-Z]*/);
 
-              var cmd = util.format('node cli.js sql firewallrule show %s AllowAllWindowsAzureIps', serverName).split(' ');
-              cmd.push('--json');
-
-              executeCmd(cmd, function (result) {
+              suite.execute('sql firewallrule show %s AllowAllWindowsAzureIps --json', serverName, function (result) {
                 result.text.should.not.be.null;
                 result.exitStatus.should.equal(0);
 
@@ -171,55 +144,45 @@ describe('CLI', function () {
         var serverName;
 
         beforeEach(function (done) {
-          var cmd = ('node cli.js sql server create').split(' ');
-          cmd.push('--administratorLogin');
-          cmd.push(administratorLogin);
-          cmd.push('--administratorPassword');
-          cmd.push(administratorLoginPassword);
-          cmd.push('--location');
-          cmd.push(location);
-          cmd.push('--json');
+          suite.execute('sql server create --administratorLogin %s --administratorPassword %s --location %s --json',
+            administratorLogin,
+            administratorLoginPassword,
+            location,
+            function (result) {
 
-          executeCmd(cmd, function (result) {
             result.text.should.not.be.null;
             result.exitStatus.should.equal(0);
 
-            serverName = JSON.parse(result.text).Name;
+            serverName = JSON.parse(result.text).name;
 
             done();
           });
         });
 
         it('should show the server', function (done) {
-          var cmd = ('node cli.js sql server show ' + serverName).split(' ');
-          cmd.push('--json');
-
-          executeCmd(cmd, function (result) {
+          suite.execute('sql server show %s --json', serverName, function (result) {
             result.text.should.not.be.null;
             result.exitStatus.should.equal(0);
 
             var server = JSON.parse(result.text);
-            server.Name.should.equal(serverName);
-            server.AdministratorLogin.should.equal(administratorLogin);
-            server.Location.should.equal(location);
+            server.name.should.equal(serverName);
+            server.administratorUserName.should.equal(administratorLogin);
+            server.location.should.equal(location);
 
             done();
           });
         });
 
         it('should list the server', function (done) {
-          var cmd = ('node cli.js sql server list').split(' ');
-          cmd.push('--json');
-
-          executeCmd(cmd, function (result) {
+          suite.execute('sql server list --json', function (result) {
             result.text.should.not.be.null;
             result.exitStatus.should.equal(0);
 
             var servers = JSON.parse(result.text);
 
-            should.exist(servers.filter(function (server) {
-              return server.Name === serverName;
-            }));
+            servers.some(function (server) {
+              return server.name === serverName;
+            }).should.equal(true);
 
             done();
           });
@@ -235,30 +198,23 @@ describe('CLI', function () {
       var serverName;
 
       beforeEach(function (done) {
-        var cmd = ('node cli.js sql server create').split(' ');
-        cmd.push('--administratorLogin');
-        cmd.push(administratorLogin);
-        cmd.push('--administratorPassword');
-        cmd.push(administratorLoginPassword);
-        cmd.push('--location');
-        cmd.push(location);
-        cmd.push('--json');
+        suite.execute('sql server create --administratorLogin %s --administratorPassword %s --location %s --json',
+          administratorLogin,
+          administratorLoginPassword,
+          location,
+          function (result) {
 
-        executeCmd(cmd, function (result) {
           result.text.should.not.be.null;
           result.exitStatus.should.equal(0);
 
-          serverName = JSON.parse(result.text).Name;
+          serverName = JSON.parse(result.text).name;
 
           done();
         });
       });
 
       afterEach(function (done) {
-        var cmd = ('node cli.js sql server delete ' + serverName).split(' ');
-        cmd.push('--json');
-
-        executeCmd(cmd, function (result) {
+        suite.execute('sql server delete %s --quiet --json', serverName, function (result) {
           result.text.should.not.be.null;
           result.exitStatus.should.equal(0);
 
@@ -268,10 +224,13 @@ describe('CLI', function () {
 
       describe('Create a firewall Rule', function () {
         it('should create a firewall rule', function (done) {
-          var cmd = util.format('node cli.js sql firewallrule create %s %s %s %s', serverName, ruleName, startIPAddress, endIPAddress).split(' ');
-          cmd.push('--json');
+          suite.execute('sql firewallrule create %s %s %s %s --json',
+            serverName,
+            ruleName,
+            startIPAddress,
+            endIPAddress,
+            function (result) {
 
-          executeCmd(cmd, function (result) {
             result.text.should.not.be.null;
             result.exitStatus.should.equal(0);
 
@@ -282,19 +241,13 @@ describe('CLI', function () {
 
       describe('Delete a firewall rule', function () {
         beforeEach(function (done) {
-          var cmd = util.format('node cli.js sql firewallrule create %s %s %s %s', serverName, ruleName, startIPAddress, endIPAddress).split(' ');
-          cmd.push('--json');
-
-          executeCmd(cmd, function () {
+          suite.execute('sql firewallrule create %s %s %s %s --json', serverName, ruleName, startIPAddress, endIPAddress, function () {
             done();
           });
         });
 
         it('should delete a firewall rule', function (done) {
-          var cmd = util.format('node cli.js sql firewallrule delete %s %s', serverName, ruleName).split(' ');
-          cmd.push('--json');
-
-          executeCmd(cmd, function (result) {
+          suite.execute('sql firewallrule delete %s %s --quiet --json', serverName, ruleName, function (result) {
             result.text.should.not.be.null;
             result.exitStatus.should.equal(0);
 
@@ -305,10 +258,7 @@ describe('CLI', function () {
 
       describe('List and show Firewall Rule', function () {
         beforeEach(function (done) {
-          var cmd = util.format('node cli.js sql firewallrule create %s %s %s %s', serverName, ruleName, startIPAddress, endIPAddress).split(' ');
-          cmd.push('--json');
-
-          executeCmd(cmd, function (result) {
+          suite.execute('sql firewallrule create %s %s %s %s --json', serverName, ruleName, startIPAddress, endIPAddress, function (result) {
             result.text.should.not.be.null;
             result.exitStatus.should.equal(0);
 
@@ -317,10 +267,7 @@ describe('CLI', function () {
         });
 
         it('should show firewall rule', function (done) {
-          var cmd = util.format('node cli.js sql firewallrule show %s %s', serverName, ruleName).split(' ');
-          cmd.push('--json');
-
-          executeCmd(cmd, function (result) {
+          suite.execute('sql firewallrule show %s %s --json', serverName, ruleName, function (result) {
             result.text.should.not.be.null;
             result.exitStatus.should.equal(0);
 
@@ -329,10 +276,7 @@ describe('CLI', function () {
         });
 
         it('should list firewall rule', function (done) {
-          var cmd = util.format('node cli.js sql firewallrule list %s', serverName).split(' ');
-          cmd.push('--json');
-
-          executeCmd(cmd, function (result) {
+          suite.execute('sql firewallrule list %s --json', serverName, function (result) {
             result.text.should.not.be.null;
             result.exitStatus.should.equal(0);
 
@@ -350,35 +294,22 @@ describe('CLI', function () {
 
       beforeEach(function (done) {
         // create a new server
-        var cmd = ('node cli.js sql server create').split(' ');
-        cmd.push(administratorLogin);
-        cmd.push(administratorLoginPassword);
-        cmd.push(location);
-        cmd.push('--json');
-
-        executeCmd(cmd, function (result) {
+        suite.execute('sql server create %s %s %s --json', administratorLogin, administratorLoginPassword, location, function (result) {
           result.text.should.not.be.null;
           result.exitStatus.should.equal(0);
 
-          serverName = JSON.parse(result.text).Name;
-
-          var cmd = util.format('node cli.js sql firewallrule create %s %s %s %s', serverName, RULE_NAME, '0.0.0.0', '255.255.255.255').split(' ');
-          cmd.push('--json');
-
-          executeCmd(cmd, function () {
+          serverName = JSON.parse(result.text).name;
+          suite.execute('sql firewallrule create %s %s %s %s --json', serverName, RULE_NAME, '0.0.0.0', '255.255.255.255', function () {
             // let firewall rule create
             setTimeout(function () {
               done();
-            }, (suiteUtil.isMocked && !suiteUtil.isRecording) ? 0 : 5000);
+            }, (suite.isMocked && !suite.isRecording) ? 0 : 5000);
           });
         });
       });
 
       afterEach(function (done) {
-        var cmd = ('node cli.js sql server delete ' + serverName).split(' ');
-        cmd.push('--json');
-
-        executeCmd(cmd, function (result) {
+        suite.execute('sql server delete %s --quiet --json', serverName, function (result) {
           result.text.should.not.be.null;
           result.exitStatus.should.equal(0);
 
@@ -388,11 +319,7 @@ describe('CLI', function () {
 
       describe('List and show databases', function () {
         it('should list master database', function (done) {
-          var cmd = util.format('node cli.js sql db list %s %s %s', serverName, administratorLogin, administratorLoginPassword).split(' ');
-          cmd.push('--json');
-
-          executeCmd(cmd, function (result) {
-            result.text.should.be.null;
+          suite.execute('sql db list %s %s %s --json', serverName, administratorLogin, administratorLoginPassword, function (result) {
             result.exitStatus.should.equal(0);
 
             var databases = JSON.parse(result.text);
@@ -404,10 +331,7 @@ describe('CLI', function () {
 
         describe('when a database is created', function () {
           beforeEach(function (done) {
-            var cmd = util.format('node cli.js sql db create %s %s %s %s', serverName, DATABASE_NAME, administratorLogin, administratorLoginPassword).split(' ');
-            cmd.push('--json');
-
-            executeCmd(cmd, function (result) {
+            suite.execute('sql db create %s %s %s %s --json', serverName, DATABASE_NAME, administratorLogin, administratorLoginPassword, function (result) {
               result.text.should.not.be.null;
               result.exitStatus.should.equal(0);
 
@@ -416,10 +340,7 @@ describe('CLI', function () {
           });
 
           it('should list new database plus master', function (done) {
-            var cmd = util.format('node cli.js sql db list %s %s %s', serverName, administratorLogin, administratorLoginPassword).split(' ');
-            cmd.push('--json');
-
-            executeCmd(cmd, function (result) {
+            suite.execute('sql db list %s %s %s --json', serverName, administratorLogin, administratorLoginPassword, function (result) {
               result.text.should.not.be.null;
               result.exitStatus.should.equal(0);
 
@@ -435,10 +356,7 @@ describe('CLI', function () {
           var DATABASE_NAME_2 = DATABASE_NAME + '2';
 
           beforeEach(function (done) {
-            var cmd = util.format('node cli.js sql db create %s %s', serverName, DATABASE_NAME_2).split(' ');
-            cmd.push('--json');
-
-            executeCmd(cmd, function (result) {
+            suite.execute('sql db create %s %s --json', serverName, DATABASE_NAME_2, function (result) {
               result.text.should.not.be.null;
               result.exitStatus.should.equal(0);
               done();
@@ -446,10 +364,7 @@ describe('CLI', function () {
           });
 
           it('should list new database', function (done) {
-            var cmd = util.format('node cli.js sql db list %s %s %s', serverName, administratorLogin, administratorLoginPassword).split(' ');
-            cmd.push('--json');
-
-            executeCmd(cmd, function (result) {
+            suite.execute('sql db list %s %s %s --json', serverName, administratorLogin, administratorLoginPassword, function (result) {
               result.text.should.not.be.null;
               result.exitStatus.should.equal(0);
 
